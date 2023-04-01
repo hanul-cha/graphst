@@ -1,1 +1,1 @@
-export { GraphstFactory } from './graphst-factory';
+export { createGraphst } from './server';

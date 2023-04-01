@@ -1,0 +1,16 @@
+{
+  "name": "graphst",
+  "version": "0.1.0",
+  "description": "나중에 차차 생각해보자",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+  },
+  "author": "caroneul <caroneul3014@gmail.com>",
+  "license": "MIT",
+  "repository": "https://github.com/hanul-cha/graphst/tree/main/packages/graphst",
+  "peerDependencies": {
+    "graphql": "^16.6.0"
+  }
+}
