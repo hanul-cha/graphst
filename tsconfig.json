@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
+    "noImplicitAny": false,
     "baseUrl": ".",
     "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
-    "lib": ["es2017", "esnext.asynciterable"],
+    "lib": ["es2018", "esnext.asynciterable"],
     "emitDeclarationOnly": true,
     "declaration": true,
     "pretty": true,
     "sourceMap": true,
     "strict": true,
-    "esModuleInterop": true,
-    "noImplicitReturns": true,
-    "experimentalDecorators": true
+    "esModuleInterop": true
   },
   "paths": {
     "graphst": ["./packages/graphst"],

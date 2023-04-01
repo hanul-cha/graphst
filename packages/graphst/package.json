@@ -12,5 +12,8 @@
   "repository": "https://github.com/hanul-cha/graphst/tree/main/packages/graphst",
   "peerDependencies": {
     "graphql": "^16.6.0"
+  },
+  "dependencies": {
+    "graphql": "^16.6.0"
   }
 }
