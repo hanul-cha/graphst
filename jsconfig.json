@@ -1,0 +1,6 @@
+{
+  "baseUrl": ".",
+  "paths": {
+    "graphst": ["./packages/graphst"]
+  }
+}
