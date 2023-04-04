@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["caroneul", "graphst"]
+  "cSpell.words": ["caroneul", "graphst"],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

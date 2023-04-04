@@ -11,9 +11,9 @@
   "license": "MIT",
   "repository": "https://github.com/hanul-cha/graphst/tree/main/packages/graphst",
   "peerDependencies": {
-    "graphql": "^16.6.0"
+    "graphql": "^15.0.0"
   },
   "dependencies": {
-    "graphql": "^16.6.0"
+    "graphql": "^15.0.0"
   }
 }

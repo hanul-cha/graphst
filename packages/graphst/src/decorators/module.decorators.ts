@@ -1,18 +1,9 @@
-import { DecoratorKey } from '../interfaces/metadata';
-import { Type } from '../interfaces/type';
-
-export interface ModuleMetadata {
-  key: DecoratorKey;
-  resolvers?: Type<any>[];
-  // services?: Provider[];
-}
+import { ModuleMetadataStorage } from '../metadata/MetadataStorage';
+import { ModuleMetadata } from '../module/types';
 
 export function Module(metadata: ModuleMetadata): ClassDecorator {
+  const storage = ModuleMetadataStorage.getStorage();
   return (target: Function) => {
-    for (const property in metadata) {
-      if (metadata.hasOwnProperty(property)) {
-        Reflect.defineMetadata(property, (metadata as any)[property], target);
-      }
-    }
+    storage.modules.set(target, metadata);
   };
 }

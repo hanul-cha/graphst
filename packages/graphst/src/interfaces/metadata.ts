@@ -16,4 +16,4 @@ export type GraphQLEntityType =
   | GraphQLUnionType
   | GraphQLEnumType;
 
-export type DecoratorKey = (type: null) => GraphQLEntityType | Function;
+export type DecoratorKey = (type: null) => GraphQLEntityType;

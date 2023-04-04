@@ -1,7 +1,8 @@
 import { createServer } from 'node:http';
 import { createGraphst } from '../../../packages/graphst/src/index';
+import { UserModule } from './user/user.module';
 
-const graphst = createGraphst();
+const graphst = createGraphst({ modules: [UserModule] });
 
 const server = createServer(graphst);
 
