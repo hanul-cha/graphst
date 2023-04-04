@@ -1,5 +1,5 @@
 import { ModuleMetadataStorage } from '../metadata/MetadataStorage';
-import { ModuleMetadata } from '../module/types';
+import { ModuleMetadata } from '../module/interfaces';
 
 export function Module(metadata: ModuleMetadata): ClassDecorator {
   const storage = ModuleMetadataStorage.getStorage();

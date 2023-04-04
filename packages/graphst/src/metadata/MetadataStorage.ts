@@ -1,4 +1,4 @@
-import { ModuleMetadata } from '../module/types';
+import { ModuleMetadata } from '../module/interfaces';
 import { MetadataStorable } from './interfaces';
 
 let moduleMetadata: MetadataStorable | null = null;

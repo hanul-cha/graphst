@@ -1,4 +1,4 @@
-import { ModuleMetadata } from '../module/types';
+import { ModuleMetadata } from '../module/interfaces';
 
 export interface MetadataStorable {
   modules: Map<Function, ModuleMetadata>;

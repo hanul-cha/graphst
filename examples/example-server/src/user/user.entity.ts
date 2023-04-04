@@ -1,3 +1,7 @@
 export class User {
-  id: number | undefined;
+  constructor(private projectRepository: any) {}
+
+  getSomething() {
+    return this.projectRepository.getSomething();
+  }
 }

@@ -9,7 +9,6 @@
   },
   "author": "caroneul <caroneul3014@gmail.com>",
   "license": "MIT",
-  "repository": "https://github.com/hanul-cha/graphst/tree/main/packages/graphst",
   "peerDependencies": {
     "graphql": "^15.0.0"
   },
