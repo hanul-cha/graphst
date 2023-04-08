@@ -1,4 +1,5 @@
-import { ModuleMetadataStorage } from './metadata/MetadataStorage';
+import { MetadataStorage } from './metadata/MetadataStorage';
+import { Module } from './module';
 
 export interface GraphstOptions<TServerContext> {
   modules: Function[];
@@ -6,21 +7,8 @@ export interface GraphstOptions<TServerContext> {
 }
 
 export class GraphstServer<TServerContext extends Record<string, any>> {
-  private _instances = {};
-
   constructor(options?: GraphstOptions<TServerContext>) {
-    options?.modules.forEach((module) => {
-      const storage = ModuleMetadataStorage.getStorage();
-      const metadata = storage.modules.get(module);
-      if (metadata) {
-        [...(metadata.resolvers ?? []), ...(metadata.providers ?? [])].forEach(
-          (resolve) => {
-            const instance = new resolve();
-            this._instances[resolve.name] = instance;
-          }
-        );
-      }
-    });
+    const modules = new Module(options?.modules);
   }
 }
 

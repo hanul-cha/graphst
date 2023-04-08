@@ -1,9 +1,9 @@
 import { MetadataStorage } from '../metadata/MetadataStorage';
 import { ModuleMetadata } from '../metadata/interfaces';
 
-export function Module(metadata: ModuleMetadata): ClassDecorator {
+export function Injectable(): ClassDecorator {
   const storage = MetadataStorage.getStorage();
   return (target: Function) => {
-    storage.modules.set(target, metadata);
+    storage.providers.set(target, { target: target as any });
   };
 }

@@ -1,20 +1,21 @@
-import { ModuleMetadata } from '../module/interfaces';
+import { Type } from '../interfaces/type';
+import { ModuleMetadata, ProviderMetadata } from './interfaces';
 import { MetadataStorable } from './interfaces';
 
-let moduleMetadata: MetadataStorable | null = null;
+let Metadata: MetadataStorable | null = null;
 
-export class ModuleMetadataStorage implements MetadataStorable {
+export class MetadataStorage implements MetadataStorable {
   static getStorage(): MetadataStorable {
-    if (!moduleMetadata) {
-      moduleMetadata = new ModuleMetadataStorage();
+    if (!Metadata) {
+      Metadata = new MetadataStorage();
     }
-    return moduleMetadata;
+    return Metadata;
+  }
+
+  clear() {
+    Metadata = null;
   }
 
   modules = new Map<Function, ModuleMetadata>();
-  resolvers = new Map<Function, MetadataResolver>();
-  queries = new Map<Function, MetadataResolver>();
-  mutations = new Map<Function, MetadataResolver>();
-  entities = new Map<Function, MetadataResolver>();
-  fields = new Map<Function, MetadataResolver>();
+  providers = new Map<Function, ProviderMetadata>();
 }
