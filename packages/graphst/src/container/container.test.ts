@@ -1,15 +1,14 @@
-import { Module } from '.';
+import { Container } from '.';
 import { Inject } from '../decorators/inject.decorators';
 import { Injectable } from '../decorators/injectable.decorators';
-import { Module as ModuleDecorators } from '../decorators/module.decorators';
 import { MetadataStorage } from '../metadata/metadataStorage';
 
-describe('graphst, module', () => {
+describe('graphst, Container', () => {
   beforeEach(() => {
     MetadataStorage.getStorage().clear();
   });
 
-  it('should create module', () => {
+  it('should create container', () => {
     @Injectable()
     class Connection {
       doTest(num: number) {
@@ -37,19 +36,13 @@ describe('graphst, module', () => {
       }
     }
 
-    @ModuleDecorators({
+    const container = new Container({
       providers: [Connection, User, Log],
-    })
-    class UserModule {}
+    });
+    container.boot();
 
-    // 컨테이너가 해줄일
-    const moduleMetadata = MetadataStorage.getStorage().modules.get(UserModule);
-
-    const userModule = new Module(moduleMetadata!);
-    userModule.boot();
-
-    const connection = userModule.getProvider(Connection);
-    const user = userModule.getProvider(User);
+    const connection = container.getProvider(Connection);
+    const user = container.getProvider(User);
 
     expect(user.test()).toEqual(12);
     expect(connection.doTest(2)).toEqual(2);

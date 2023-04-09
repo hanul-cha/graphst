@@ -1,14 +1,14 @@
-import { ModuleMetadata } from '../metadata/interfaces';
 import { MetadataStorage } from '../metadata/MetadataStorage';
 import { injectableMetadata } from '../metadata/metaProps';
+import { ContainerOptions } from './interfaces';
 
 export type ConstructType = new (...args: any[]) => any;
 
-export class Module {
+export class Container {
   private providerInstances = new Map<Function, any>();
   private resolverInstances = new Map<Function, any>();
 
-  constructor(private readonly moduleMetadata: ModuleMetadata) {}
+  constructor(private readonly containerOptions: ContainerOptions) {}
 
   boot() {
     this.factory();
@@ -18,7 +18,7 @@ export class Module {
   private factory() {
     const storage = MetadataStorage.getStorage();
 
-    this.moduleMetadata.providers?.forEach((provider) => {
+    this.containerOptions.providers?.forEach((provider) => {
       const metadata = storage.providers.get(provider);
 
       // metadata는 나중에 계속 추가될것임(미들웨어 같은거)

@@ -1,4 +1,4 @@
-import { ModuleMetadata, ProviderMetadata } from './interfaces';
+import { ProviderMetadata } from './interfaces';
 import { MetadataStorable } from './interfaces';
 
 let Metadata: MetadataStorable | null = null;
@@ -15,6 +15,5 @@ export class MetadataStorage implements MetadataStorable {
     Metadata = null;
   }
 
-  modules = new Map<Function, ModuleMetadata>();
   providers = new Map<Function, ProviderMetadata>();
 }

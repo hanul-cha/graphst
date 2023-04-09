@@ -1,14 +1,17 @@
-import { MetadataStorage } from './metadata/metadataStorage';
-import { Module } from './module';
+import { Container } from './container';
 
 export interface GraphstOptions<TServerContext> {
-  modules: Function[];
+  resolvers?: Function[];
+  providers?: Function[];
   context?: Promise<TServerContext>;
 }
 
 export class GraphstServer<TServerContext extends Record<string, any>> {
   constructor(options?: GraphstOptions<TServerContext>) {
-    const modules = new Module(options?.modules);
+    const container = new Container({
+      providers: options?.providers ?? [],
+      resolvers: options?.resolvers ?? [],
+    });
   }
 }
 
