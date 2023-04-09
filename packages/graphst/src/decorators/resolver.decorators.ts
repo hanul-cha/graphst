@@ -1,11 +1,8 @@
-import { MetadataStorage } from '../metadata/MetadataStorage';
+import { MetadataStorage } from '../metadata/metadataStorage';
 
 export function Resolver(metadata: any): ClassDecorator {
   const storage = MetadataStorage.getStorage();
   return (target: Function) => {
-    storage.resolvers.set(target, {
-      target,
-      middleware: metadata.middleware,
-    });
+    storage.providers.set(target, { target: target as any });
   };
 }

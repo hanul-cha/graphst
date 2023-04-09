@@ -1,4 +1,4 @@
-import { MetadataStorage } from './metadata/MetadataStorage';
+import { MetadataStorage } from './metadata/metadataStorage';
 import { Module } from './module';
 
 export interface GraphstOptions<TServerContext> {

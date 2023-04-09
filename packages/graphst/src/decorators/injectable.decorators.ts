@@ -1,5 +1,4 @@
-import { MetadataStorage } from '../metadata/MetadataStorage';
-import { ModuleMetadata } from '../metadata/interfaces';
+import { MetadataStorage } from '../metadata/metadataStorage';
 
 export function Injectable(): ClassDecorator {
   const storage = MetadataStorage.getStorage();

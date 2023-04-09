@@ -1,4 +1,3 @@
-import { Type } from '../interfaces/type';
 import { ModuleMetadata, ProviderMetadata } from './interfaces';
 import { MetadataStorable } from './interfaces';
 

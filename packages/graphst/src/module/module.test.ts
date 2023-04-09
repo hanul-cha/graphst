@@ -2,8 +2,7 @@ import { Module } from '.';
 import { Inject } from '../decorators/inject.decorators';
 import { Injectable } from '../decorators/injectable.decorators';
 import { Module as ModuleDecorators } from '../decorators/module.decorators';
-import { MetadataStorage } from '../metadata/MetadataStorage';
-import { injectableMetadata } from '../metadata/metaProps';
+import { MetadataStorage } from '../metadata/metadataStorage';
 
 describe('graphst, module', () => {
   beforeEach(() => {
