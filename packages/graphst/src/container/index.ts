@@ -1,10 +1,10 @@
 import { MetadataStorage } from '../metadata/MetadataStorage';
-import { injectableMetadata } from '../metadata/metaProps';
 import { ContainerOptions } from './interfaces';
 
 export type ConstructType = new (...args: any[]) => any;
 
 export class Container {
+  private storage = MetadataStorage.getStorage();
   private providerInstances = new Map<Function, any>();
   private resolverInstances = new Map<Function, any>();
 
@@ -16,10 +16,9 @@ export class Container {
   }
 
   private factory() {
-    const storage = MetadataStorage.getStorage();
-
+    // 데코레이터로 수집한 객체가 있다면  인스턴스화 해서 모아놓음
     this.containerOptions.providers?.forEach((provider) => {
-      const metadata = storage.providers.get(provider);
+      const metadata = this.storage.getProvider(provider);
 
       // metadata는 나중에 계속 추가될것임(미들웨어 같은거)
       // 여기서 검색을 위한 키는 게속 metadata.target이여야함
@@ -32,9 +31,10 @@ export class Container {
     });
   }
 
+  // 인스턴스에 주입할 수 있는 인스턴스를 찾아 모두 맵핑
   private resolve() {
     for (const [target, instance] of this.providerInstances) {
-      const props = injectableMetadata.injectProps.get(target);
+      const props = this.storage.getInjectProps(target);
       if (!props || props.length === 0) {
         continue;
       }
