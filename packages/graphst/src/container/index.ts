@@ -19,10 +19,6 @@ export class Container {
     // 데코레이터로 수집한 객체가 있다면  인스턴스화 해서 모아놓음
     this.containerOptions.providers?.forEach((provider) => {
       const metadata = this.storage.getProvider(provider);
-
-      // metadata는 나중에 계속 추가될것임(미들웨어 같은거)
-      // 여기서 검색을 위한 키는 게속 metadata.target이여야함
-
       if (metadata) {
         const instance = new metadata.target();
         // metadata.middleware()
@@ -34,23 +30,25 @@ export class Container {
   // 인스턴스에 주입할 수 있는 인스턴스를 찾아 모두 맵핑
   private resolve() {
     for (const [target, instance] of this.providerInstances) {
-      const props = this.storage.getInjectProps(target);
-      if (!props || props.length === 0) {
-        continue;
-      }
+      const circular = (cTarget: Function, cInstance: any) => {
+        const props = this.storage.getInjectProps(cTarget);
 
-      props.forEach(({ name, prop }) => {
-        const propsData = this.getProvider(prop);
-        if (propsData) {
-          Object.defineProperty(instance, name, {
-            value: propsData,
-            configurable: true,
-            writable: false,
-            enumerable: false,
-            // [name]: propsData,
-          });
+        for (const { name, prop } of props ?? []) {
+          const propsData = this.getProvider(prop);
+          if (propsData) {
+            circular(prop, propsData);
+            Object.defineProperty(cInstance, name, {
+              value: propsData,
+              configurable: true,
+              writable: false,
+              enumerable: false,
+              // [name]: propsData,
+            });
+          }
         }
-      });
+      };
+
+      circular(target, instance);
     }
   }
 
