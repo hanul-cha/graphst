@@ -1,8 +1,5 @@
-import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { Age } from './age';
-import { Connection } from './connect';
-import { User } from './user';
 
 function test() {
   console.log('이거 또 없을거지??', Age); // 이거 왜 없지?

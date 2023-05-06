@@ -1,7 +1,6 @@
+import { ConstructType } from '../interfaces/type';
 import { MetadataStorage } from '../metadata/MetadataStorage';
 import { ContainerOptions } from './interfaces';
-
-export type ConstructType = new (...args: any[]) => any;
 
 export class Container {
   private storage = MetadataStorage.getStorage();

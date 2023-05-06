@@ -1,8 +1,10 @@
+import { ConstructType } from '../interfaces/type';
 import { MetadataStorage } from '../metadata/metadataStorage';
 
-export function Resolver(metadata: any): ClassDecorator {
+export function Resolver(resolverType: ConstructType): ClassDecorator {
   const storage = MetadataStorage.getStorage();
   return (target: Function) => {
-    // storage.providers.set(target, { target: target as any });
+    // Procedure for auto-resolving
+    storage.setProvider(target, { target: target as any });
   };
 }

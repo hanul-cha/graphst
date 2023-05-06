@@ -17,6 +17,7 @@ export class MetadataStorage implements MetadataStorable {
 
   private providers = new Map<Function, ProviderMetadata>();
   private injectProps = new Map<Function, MetadataInjectProp[]>();
+  private resolverMethods = new Map<string, Function[]>();
 
   setProvider(target: Function, metadata: ProviderMetadata) {
     this.providers.set(target, metadata);
@@ -32,11 +33,28 @@ export class MetadataStorage implements MetadataStorable {
     this.injectProps.set(target, props);
   }
 
+  setResolverMethod(target, fn: Function, _option?: any) {
+    let methods = this.resolverMethods.get(target);
+    if (methods) {
+      methods.push(fn);
+    } else {
+      methods = [fn];
+    }
+    this.resolverMethods.set(target, methods);
+  }
+
   getProvider(target: Function) {
     return this.providers.get(target);
   }
 
   getInjectProps(target: Function) {
     return this.injectProps.get(target);
+  }
+
+  getResolverMethods() {
+    return [...this.resolverMethods].map(([key, value]) => ({
+      type: key,
+      methods: value,
+    }));
   }
 }

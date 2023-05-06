@@ -1,11 +1,12 @@
-import { Container } from '.';
+import { Container } from '../container';
 import { MetadataStorage } from '../metadata/metadataStorage';
-import { Age } from './test/age';
-import { AgeService } from './test/ageService';
-import { AgeService2 } from './test/ageService2';
-import { Connection } from './test/connect';
-import { Log } from './test/log';
-import { User } from './test/user';
+import { Age } from './object/age';
+import { AgeService } from './object/ageService';
+import { AgeService2 } from './object/ageService2';
+import { Connection } from './object/connect';
+import { Log } from './object/log';
+import { Project } from './object/project';
+import { User } from './object/user';
 
 describe('graphst, Container', () => {
   beforeEach(() => {
@@ -13,7 +14,7 @@ describe('graphst, Container', () => {
   });
 
   const container = new Container({
-    providers: [Connection, User, Log, Age, AgeService, AgeService2],
+    providers: [Connection, User, Log, Age, AgeService, AgeService2, Project],
   });
   container.boot();
 
