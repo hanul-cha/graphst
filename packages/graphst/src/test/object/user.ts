@@ -4,20 +4,15 @@ import { Age } from './age';
 import { Connection } from './connect';
 import { Log } from './log';
 
-function test() {
-  console.log('test', Age); // 이거 왜 없지?
-  return Age;
-}
-
 @Injectable()
 export class User {
-  @Inject(Connection)
+  @Inject(() => Connection)
   readonly connection!: Connection;
 
-  @Inject(Age)
+  @Inject(() => Age)
   readonly age!: Age;
 
-  @Inject(Log)
+  @Inject(() => Log)
   readonly log!: Log;
 
   test() {

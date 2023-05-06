@@ -33,9 +33,9 @@ export class Container {
         const props = this.storage.getInjectProps(cTarget);
 
         for (const { name, prop } of props ?? []) {
-          const propsData = this.getProvider(prop);
+          const propsData = this.getProvider(prop());
           if (propsData) {
-            circular(prop, propsData);
+            circular(prop(), propsData);
             Object.defineProperty(cInstance, name, {
               value: propsData,
               configurable: true,

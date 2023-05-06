@@ -1,4 +1,4 @@
-import { Type } from '../interfaces/type';
+import { ConstructType, Type } from '../interfaces/type';
 
 export type SetMetaDataFunction<T> = (target: Function, metaData: T) => void;
 export type SetResolverMethod = (
@@ -17,7 +17,7 @@ export interface ResolverMetadata {
 
 export interface MetadataInjectProp {
   target: any;
-  prop: any;
+  prop: () => ConstructType;
   name: string | symbol;
 }
 

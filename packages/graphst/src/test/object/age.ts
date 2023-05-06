@@ -5,10 +5,10 @@ import { Connection } from './connect';
 
 @Injectable()
 export class Age {
-  @Inject(Connection)
+  @Inject(() => Connection)
   readonly connection!: Connection;
 
-  @Inject(AgeService)
+  @Inject(() => AgeService)
   readonly ageService!: AgeService;
 
   test() {

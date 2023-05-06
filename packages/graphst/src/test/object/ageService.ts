@@ -4,7 +4,7 @@ import { AgeService2 } from './ageService2';
 
 @Injectable()
 export class AgeService {
-  @Inject(AgeService2)
+  @Inject(() => AgeService2)
   readonly ageService2!: AgeService2;
 
   getAge() {
