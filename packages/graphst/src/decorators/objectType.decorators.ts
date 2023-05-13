@@ -5,6 +5,9 @@ export function ObjectType(name?: string): ClassDecorator {
   return (target: Function) => {
     // Procedure for auto-resolving
     storage.setProvider(target, { target: target as any });
-    storage.setObjectType(name || target.name, target);
+    storage.setObjectType(target, {
+      name: name || target.name,
+      target,
+    });
   };
 }

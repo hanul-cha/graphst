@@ -1,4 +1,4 @@
-import { GraphQLType } from 'graphql';
+import { GraphQLOutputType, GraphQLType } from 'graphql';
 import { Type } from '../interfaces/type';
 
 export type SetMetaDataFunction<T> = (target: Function, metaData: T) => void;
@@ -29,12 +29,12 @@ export interface ResolverMethodMetadata {
 
 export interface ObjectTypeMetadata {
   name: string;
-  target: Type;
+  target: Function;
 }
 
 export interface FieldTypeMetadata {
   name: string | symbol;
-  returnType: () => GraphQLType;
+  returnType: () => GraphQLOutputType;
 }
 
 // export interface argsMetadata {
@@ -49,14 +49,15 @@ export interface MetadataStorable {
   setProvider: SetMetaDataFunction<ResolverMetadata>;
   setInjectProps: SetMetaDataFunction<MetadataInjectProp>;
   setResolverMethod: SetResolverMethod;
-  setObjectType: (name: string, target: Function) => void;
+  setObjectType: SetMetaDataFunction<ObjectTypeMetadata>;
   setField: SetMetaDataFunction<FieldTypeMetadata>;
   // setArgs: SetMetaDataFunction<argsMetadata>;
 
   getProvider: (target: Function) => ProviderMetadata | undefined;
   getInjectProps: (target: Function) => MetadataInjectProp[] | undefined;
   getResolverMethods: () => ResolverMethodMetadata[];
-  getObjectType: (target: Function) => string | null;
+  getObjectTypeAll: () => ObjectTypeMetadata[];
+  getFields: (target: Function) => FieldTypeMetadata[];
   // getArgs: (target: Function) => argsMetadata[] | undefined;
 
   clear: () => void;

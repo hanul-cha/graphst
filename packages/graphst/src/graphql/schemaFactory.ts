@@ -1,7 +1,17 @@
-export class SchemaFactory {
-  constructor() {}
+import { GraphQLSchema } from 'graphql';
+import { Inject } from '../decorators/inject.decorators';
+import { GraphqlTypeFactory } from './graphqlTypeFactory';
 
-  generate() {
-    // 스키마 전부 로드
+export class SchemaFactory {
+  @Inject(() => GraphqlTypeFactory)
+  readonly graphqlTypeFactory!: GraphqlTypeFactory;
+
+  generate(): GraphQLSchema {
+    return new GraphQLSchema({
+      // mutation: this.mutationTypeFactory.create(resolvers, options),
+      // query: this.queryTypeFactory.create(resolvers, options),
+      types: this.graphqlTypeFactory.create(),
+      // directives: [...specifiedDirectives, ...(options.directives ?? [])],
+    });
   }
 }
