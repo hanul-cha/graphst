@@ -5,7 +5,7 @@ import { AgeService } from './object/ageService';
 import { AgeService2 } from './object/ageService2';
 import { Connection } from './object/connect';
 import { Log } from './object/log';
-import { Project } from './object/project';
+import { Project } from './entity/project';
 import { User } from './object/user';
 
 describe('graphst, Container', () => {

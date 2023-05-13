@@ -1,7 +1,5 @@
-import { ReturnTypeFunc } from '../interfaces/type';
-
 export function Query(
-  nameOrType?: string | ReturnTypeFunc,
+  //   nameOrType?: ReturnTypeFunc,
   options?: any
 ): MethodDecorator {
   return <T>(

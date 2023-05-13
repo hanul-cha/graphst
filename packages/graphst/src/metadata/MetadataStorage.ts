@@ -1,4 +1,8 @@
-import { MetadataInjectProp, ProviderMetadata } from './interfaces';
+import {
+  FieldTypeMetadata,
+  MetadataInjectProp,
+  ProviderMetadata,
+} from './interfaces';
 import { MetadataStorable } from './interfaces';
 
 let Metadata: MetadataStorable | null = null;
@@ -18,6 +22,8 @@ export class MetadataStorage implements MetadataStorable {
   private providers = new Map<Function, ProviderMetadata>();
   private injectProps = new Map<Function, MetadataInjectProp[]>();
   private resolverMethods = new Map<string, Function[]>();
+  private objectTypes = new Map<Function, string>();
+  private fields = new Map<Function, FieldTypeMetadata[]>();
 
   setProvider(target: Function, metadata: ProviderMetadata) {
     this.providers.set(target, metadata);
@@ -43,6 +49,20 @@ export class MetadataStorage implements MetadataStorable {
     this.resolverMethods.set(target, methods);
   }
 
+  setObjectType(name: string, target: Function) {
+    this.objectTypes.set(target, name);
+  }
+
+  setField(target: Function, metaData: FieldTypeMetadata) {
+    let fields = this.fields.get(target);
+    if (fields) {
+      fields.push(metaData);
+    } else {
+      fields = [metaData];
+    }
+    this.fields.set(target, fields);
+  }
+
   getProvider(target: Function) {
     return this.providers.get(target);
   }
@@ -56,5 +76,9 @@ export class MetadataStorage implements MetadataStorable {
       type: key,
       methods: value,
     }));
+  }
+
+  getObjectType(target: Function) {
+    return this.objectTypes.get(target) ?? null;
   }
 }

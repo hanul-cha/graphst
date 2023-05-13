@@ -2,13 +2,15 @@ import { ConstructType } from '../interfaces/type';
 import { MetadataInjectProp } from '../metadata/interfaces';
 import { MetadataStorage } from '../metadata/MetadataStorage';
 
-export function Inject(
-  prop: () => ConstructType
-): (target: any, property: string | symbol) => void {
-  return (target: any, property: string | symbol) => {
+export function Inject(prop: () => ConstructType): PropertyDecorator {
+  return (target: object, propertyKey: string | symbol) => {
     const _target = target.constructor;
     const storage = MetadataStorage.getStorage();
-    const value: MetadataInjectProp = { target: _target, prop, name: property };
+    const value: MetadataInjectProp = {
+      target: _target,
+      prop,
+      name: propertyKey,
+    };
     storage.setInjectProps(_target, value);
   };
 }

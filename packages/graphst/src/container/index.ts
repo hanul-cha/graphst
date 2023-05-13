@@ -5,7 +5,6 @@ import { ContainerOptions } from './interfaces';
 export class Container {
   private storage = MetadataStorage.getStorage();
   private providerInstances = new Map<Function, any>();
-  private resolverInstances = new Map<Function, any>();
 
   constructor(private readonly containerOptions: ContainerOptions) {}
 
@@ -33,9 +32,10 @@ export class Container {
         const props = this.storage.getInjectProps(cTarget);
 
         for (const { name, prop } of props ?? []) {
-          const propsData = this.getProvider(prop());
+          const targetProp = prop();
+          const propsData = this.getProvider(targetProp);
           if (propsData) {
-            circular(prop(), propsData);
+            circular(targetProp, propsData);
             Object.defineProperty(cInstance, name, {
               value: propsData,
               configurable: true,

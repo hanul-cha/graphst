@@ -1,10 +1,11 @@
+import { GraphQLBoolean } from 'graphql';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { Query } from '../../decorators/query.decorators';
-import { Project } from '../object/project';
+import { Project } from '../entity/project';
 
-@Injectable()
+// @Injectable()
 export class ProjectResolver {
-  @Query()
+  // @Query(() => GraphQLBoolean)
   getProject(): Project[] {
     return [
       {
