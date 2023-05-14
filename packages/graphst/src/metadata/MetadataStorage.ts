@@ -1,4 +1,5 @@
 import {
+  FieldResolverTypeMetadata,
   FieldTypeMetadata,
   MetadataInjectProp,
   ObjectTypeMetadata,
@@ -25,6 +26,7 @@ export class MetadataStorage implements MetadataStorable {
   private resolverMethods = new Map<string, Function[]>();
   private objectTypes = new Map<Function, ObjectTypeMetadata>();
   private fields = new Map<Function, FieldTypeMetadata[]>();
+  private fieldResolversSet = new Set<FieldResolverTypeMetadata>();
 
   setProvider(target: Function, metadata: ProviderMetadata) {
     this.providers.set(target, metadata);
@@ -64,6 +66,10 @@ export class MetadataStorage implements MetadataStorable {
     this.fields.set(target, fields);
   }
 
+  setFieldResolver(metaData: FieldResolverTypeMetadata) {
+    this.fieldResolversSet.add(metaData);
+  }
+
   getProvider(target: Function) {
     return this.providers.get(target);
   }
@@ -80,10 +86,14 @@ export class MetadataStorage implements MetadataStorable {
   }
 
   getObjectTypeAll() {
-    return Object.values(this.objectTypes);
+    return [...this.objectTypes.values()];
   }
 
   getFields(target: Function) {
     return this.fields.get(target) ?? [];
+  }
+
+  getFieldResolversAll() {
+    return [...this.fieldResolversSet];
   }
 }

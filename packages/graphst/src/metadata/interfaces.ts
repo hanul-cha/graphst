@@ -1,5 +1,5 @@
-import { GraphQLOutputType, GraphQLType } from 'graphql';
-import { Type } from '../interfaces/type';
+import { GraphQLInputType, GraphQLOutputType } from 'graphql';
+import { GraphQLEntityType, Type } from '../interfaces/type';
 
 export type SetMetaDataFunction<T> = (target: Function, metaData: T) => void;
 export type SetResolverMethod = (
@@ -37,13 +37,14 @@ export interface FieldTypeMetadata {
   returnType: () => GraphQLOutputType;
 }
 
-// export interface argsMetadata {
-//   target: Type;
-//   name: string;
-//   option: {
-//     type: GraphQLType;
-//   };
-// }
+export type FieldResolverTarget = () => GraphQLEntityType | Function;
+
+export interface FieldResolverTypeMetadata {
+  target: FieldResolverTarget;
+  name: string | symbol;
+  returnType: () => GraphQLOutputType;
+  args?: Record<string, () => GraphQLInputType>;
+}
 
 export interface MetadataStorable {
   setProvider: SetMetaDataFunction<ResolverMetadata>;
@@ -51,14 +52,14 @@ export interface MetadataStorable {
   setResolverMethod: SetResolverMethod;
   setObjectType: SetMetaDataFunction<ObjectTypeMetadata>;
   setField: SetMetaDataFunction<FieldTypeMetadata>;
-  // setArgs: SetMetaDataFunction<argsMetadata>;
+  setFieldResolver: (metaData: FieldResolverTypeMetadata) => void;
 
   getProvider: (target: Function) => ProviderMetadata | undefined;
   getInjectProps: (target: Function) => MetadataInjectProp[] | undefined;
   getResolverMethods: () => ResolverMethodMetadata[];
   getObjectTypeAll: () => ObjectTypeMetadata[];
   getFields: (target: Function) => FieldTypeMetadata[];
-  // getArgs: (target: Function) => argsMetadata[] | undefined;
+  getFieldResolversAll: () => FieldResolverTypeMetadata[];
 
   clear: () => void;
 }

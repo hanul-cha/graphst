@@ -7,6 +7,7 @@ import { Connection } from './object/connect';
 import { Log } from './object/log';
 import { Project } from './entity/project';
 import { User } from './object/user';
+import { ProjectResolver } from './resolver/project.resolver';
 
 describe('graphst, Container', () => {
   beforeEach(() => {
@@ -14,7 +15,16 @@ describe('graphst, Container', () => {
   });
 
   const container = new Container({
-    providers: [Connection, User, Log, Age, AgeService, AgeService2, Project],
+    providers: [
+      Connection,
+      User,
+      Log,
+      Age,
+      AgeService,
+      AgeService2,
+      Project,
+      ProjectResolver,
+    ],
   });
   container.boot();
 

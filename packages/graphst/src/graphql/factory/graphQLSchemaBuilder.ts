@@ -1,8 +1,10 @@
 import { GraphQLSchema } from 'graphql';
-import { Inject } from '../decorators/inject.decorators';
-import { GraphqlTypeFactory } from './graphqlTypeFactory';
+import { Inject } from '../../decorators/inject.decorators';
+import { Injectable } from '../../decorators/injectable.decorators';
+import { GraphqlTypeFactory } from './schema/graphqlTypeFactory';
 
-export class SchemaFactory {
+@Injectable()
+export class GraphQLSchemaBuilder {
   @Inject(() => GraphqlTypeFactory)
   readonly graphqlTypeFactory!: GraphqlTypeFactory;
 
