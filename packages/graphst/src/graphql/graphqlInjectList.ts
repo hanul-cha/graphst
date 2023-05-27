@@ -1,11 +1,4 @@
-import { GraphQLFactory } from './factory/graphQLFactory';
-import { GraphQLResolverBuilder } from './factory/graphQLResolverBuilder';
-import { GraphQLSchemaBuilder } from './factory/graphQLSchemaBuilder';
-import { GraphqlTypeFactory } from './factory/schema/graphqlTypeFactory';
+import { GraphqlFactory } from './factory/graphqlFactory';
+import { GraphqlObjectFactory } from './factory/graphqlObjectFactory';
 
-export const graphqlInjectList = [
-  GraphqlTypeFactory,
-  GraphQLFactory,
-  GraphQLResolverBuilder,
-  GraphQLSchemaBuilder,
-];
+export const graphqlInjectList = [GraphqlFactory, GraphqlObjectFactory];

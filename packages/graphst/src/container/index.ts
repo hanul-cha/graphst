@@ -1,4 +1,4 @@
-import { GraphQLFactory } from '../graphql/factory/graphQLFactory';
+import { GraphqlFactory } from '../graphql/factory/graphqlFactory';
 import { graphqlInjectList } from '../graphql/graphqlInjectList';
 import { ConstructType } from '../interfaces/type';
 import { MetadataStorage } from '../metadata/MetadataStorage';
@@ -17,7 +17,7 @@ export class Container {
     ];
     this.factory();
     this.resolve();
-    this.getProvider(GraphQLFactory).generate();
+    this.getProvider(GraphqlFactory).generate();
   }
 
   private factory() {

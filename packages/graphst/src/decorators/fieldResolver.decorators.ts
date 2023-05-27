@@ -8,15 +8,18 @@ export function FieldResolver(options: {
   args?: Record<string, () => GraphQLInputType>;
   name?: string;
 }): MethodDecorator {
-  return <T>(
+  return (
     _target: object,
     propertyKey: string | symbol,
-    _descriptor: TypedPropertyDescriptor<T>
+    descriptor: TypedPropertyDescriptor<any>
   ) => {
+    const originalMethod = descriptor.value;
+
     const storage = MetadataStorage.getStorage();
-    storage.setFieldResolver({
+    storage.setFieldResolver(options.parent, {
       target: options.parent,
       name: options.name || propertyKey,
+      fn: originalMethod,
       returnType: options.returnType,
       args: options.args,
     });

@@ -27,7 +27,7 @@ export class ProjectResolver {
       key: () => GraphQLInt,
     },
   })
-  hasUser(parent: Project, args: { key: number }): boolean {
+  hasUser(parent: User, args: { key: number }): boolean {
     return false;
   }
 }
