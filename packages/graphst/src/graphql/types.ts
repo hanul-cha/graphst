@@ -12,7 +12,7 @@ export interface ResolverValue {
 }
 
 export interface GraphqlGenerateFactory {
-  generateSchema: () => {
+  generate: () => {
     schemes: GraphQLNamedType[];
     resolvers: ResolverValue[];
   };

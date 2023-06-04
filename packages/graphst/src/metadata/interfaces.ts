@@ -1,13 +1,12 @@
 import { GraphQLInputType, GraphQLOutputType } from 'graphql';
 import { GraphQLEntityType, Type } from '../interfaces/type';
 
-export type SetMetaDataFunction<T> = (target: Function, metaData: T) => void;
+export type SetMetaDataFunction<T, U = Function> = (
+  target: U,
+  metaData: T
+) => void;
 
 export interface ProviderMetadata {
-  target: Type;
-}
-
-export interface ResolverMetadata {
   target: Type;
 }
 
@@ -15,11 +14,6 @@ export interface MetadataInjectProp {
   target: any;
   prop: () => Type;
   name: string | symbol;
-}
-
-export interface ResolverMethodMetadata {
-  methods: Function[];
-  type: string; // query, mutation, subscription , objectName
 }
 
 export interface ObjectTypeMetadata {
@@ -34,8 +28,7 @@ export interface FieldTypeMetadata {
 
 export type FieldResolverTarget = () => GraphQLEntityType | Function;
 
-export interface FieldResolverTypeMetadata {
-  target: FieldResolverTarget;
+export interface FieldResolverMetadata {
   name: string | symbol;
   returnType: () => GraphQLOutputType;
   fn: Function;
@@ -44,24 +37,34 @@ export interface FieldResolverTypeMetadata {
   };
 }
 
-export interface SetResolverMethod extends FieldResolverTypeMetadata {
-  name: 'query' | 'mutation' | 'subscription';
+export interface FieldResolverTypeMetadata extends FieldResolverMetadata {
+  target: FieldResolverTarget;
+}
+
+export type ResolverGraphqlTarget = 'query' | 'mutation' | 'subscription';
+export interface ResolverGraphqlTypeMetadata extends FieldResolverMetadata {
+  target: ResolverGraphqlTarget;
 }
 
 export interface MetadataStorable {
-  setProvider: SetMetaDataFunction<ResolverMetadata>;
+  setProvider: SetMetaDataFunction<ProviderMetadata>;
   setInjectProps: SetMetaDataFunction<MetadataInjectProp>;
-  // setResolverMethod: SetMetaDataFunction<ResolverMethodMetadata>;
   setObjectType: SetMetaDataFunction<ObjectTypeMetadata>;
   setField: SetMetaDataFunction<FieldTypeMetadata>;
   setFieldResolver: SetMetaDataFunction<FieldResolverTypeMetadata>;
+  setGraphqlMethod: SetMetaDataFunction<
+    ResolverGraphqlTypeMetadata,
+    ResolverGraphqlTarget
+  >;
 
   getProvider: (target: Function) => ProviderMetadata | undefined;
   getInjectProps: (target: Function) => MetadataInjectProp[] | undefined;
-  // getResolverMethods: () => ResolverMethodMetadata[];
   getObjectTypeAll: () => ObjectTypeMetadata[];
   getFields: (target: Function) => FieldTypeMetadata[];
   getFieldResolvers: (target: Function) => FieldResolverTypeMetadata[];
+  getGraphqlMethod: (
+    target: ResolverGraphqlTarget
+  ) => ResolverGraphqlTypeMetadata[];
 
   clear: () => void;
 }

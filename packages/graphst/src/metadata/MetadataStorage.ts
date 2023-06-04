@@ -4,6 +4,8 @@ import {
   MetadataInjectProp,
   ObjectTypeMetadata,
   ProviderMetadata,
+  ResolverGraphqlTarget,
+  ResolverGraphqlTypeMetadata,
 } from './interfaces';
 import { MetadataStorable } from './interfaces';
 
@@ -23,10 +25,13 @@ export class MetadataStorage implements MetadataStorable {
 
   private providers = new Map<Function, ProviderMetadata>();
   private injectProps = new Map<Function, MetadataInjectProp[]>();
-  private resolverMethods = new Map<string, Function[]>();
   private objectTypes = new Map<Function, ObjectTypeMetadata>();
   private fields = new Map<Function, FieldTypeMetadata[]>();
   private fieldResolversSet = new Map<Function, FieldResolverTypeMetadata[]>();
+  private graphqlMethods = new Map<
+    ResolverGraphqlTarget,
+    ResolverGraphqlTypeMetadata[]
+  >();
 
   setProvider(target: Function, metadata: ProviderMetadata) {
     this.providers.set(target, metadata);
@@ -42,14 +47,17 @@ export class MetadataStorage implements MetadataStorable {
     this.injectProps.set(target, props);
   }
 
-  setResolverMethod(target, fn: Function, _option?: any) {
-    let methods = this.resolverMethods.get(target);
+  setGraphqlMethod(
+    target: ResolverGraphqlTarget,
+    option: ResolverGraphqlTypeMetadata
+  ) {
+    let methods = this.graphqlMethods.get(target);
     if (methods) {
-      methods.push(fn);
+      methods.push(option);
     } else {
-      methods = [fn];
+      methods = [option];
     }
-    this.resolverMethods.set(target, methods);
+    this.graphqlMethods.set(target, methods);
   }
 
   setObjectType(target: Function, metaData: ObjectTypeMetadata) {
@@ -84,13 +92,6 @@ export class MetadataStorage implements MetadataStorable {
     return this.injectProps.get(target);
   }
 
-  getResolverMethods() {
-    return [...this.resolverMethods].map(([key, value]) => ({
-      type: key,
-      methods: value,
-    }));
-  }
-
   getObjectTypeAll() {
     return [...this.objectTypes.values()];
   }
@@ -101,5 +102,9 @@ export class MetadataStorage implements MetadataStorable {
 
   getFieldResolvers(target: Function) {
     return this.fieldResolversSet.get(target) ?? [];
+  }
+
+  getGraphqlMethod(target: ResolverGraphqlTarget) {
+    return this.graphqlMethods.get(target) ?? [];
   }
 }
