@@ -6,7 +6,7 @@ import { ContainerOptions } from './interfaces';
 
 export class Container {
   private storage = MetadataStorage.getStorage();
-  private providerInstances = new Map<Function, any>();
+  private providerInstances = new WeakMap<Function, any>();
 
   constructor(private readonly containerOptions: ContainerOptions) {}
 
@@ -34,7 +34,12 @@ export class Container {
 
   // 인스턴스에 주입할 수 있는 인스턴스를 찾아 모두 맵핑
   private resolve() {
-    for (const [target, instance] of this.providerInstances) {
+    const dependencies = this.storage.getInjectPropAll().map(({ target }) => ({
+      target,
+      instance: this.getProvider(target),
+    }));
+
+    for (const { target, instance } of dependencies) {
       const circular = (cTarget: Function, cInstance: any) => {
         const props = this.storage.getInjectProps(cTarget);
 
@@ -58,7 +63,7 @@ export class Container {
     }
   }
 
-  getProvider<T extends ConstructType>(target: T): InstanceType<T> {
+  getProvider<T extends ConstructType>(target: T | Function): InstanceType<T> {
     return this.providerInstances.get(target);
   }
 }

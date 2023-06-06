@@ -11,7 +11,7 @@ export interface ProviderMetadata {
 }
 
 export interface MetadataInjectProp {
-  target: any;
+  target: Function;
   prop: () => Type;
   name: string | symbol;
 }
@@ -58,7 +58,8 @@ export interface MetadataStorable {
   >;
 
   getProvider: (target: Function) => ProviderMetadata | undefined;
-  getInjectProps: (target: Function) => MetadataInjectProp[] | undefined;
+  getInjectProps: (target: Function) => MetadataInjectProp[];
+  getInjectPropAll: () => MetadataInjectProp[];
   getObjectTypeAll: () => ObjectTypeMetadata[];
   getFields: (target: Function) => FieldTypeMetadata[];
   getFieldResolvers: (target: Function) => FieldResolverTypeMetadata[];

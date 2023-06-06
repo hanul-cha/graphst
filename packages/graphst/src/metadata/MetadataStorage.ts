@@ -33,6 +33,7 @@ export class MetadataStorage implements MetadataStorable {
     ResolverGraphqlTypeMetadata[]
   >();
 
+  // set
   setProvider(target: Function, metadata: ProviderMetadata) {
     this.providers.set(target, metadata);
   }
@@ -83,13 +84,19 @@ export class MetadataStorage implements MetadataStorable {
     }
     this.fieldResolversSet.set(target, fileResolver);
   }
+  // set end
 
+  // get
   getProvider(target: Function) {
     return this.providers.get(target);
   }
 
   getInjectProps(target: Function) {
-    return this.injectProps.get(target);
+    return this.injectProps.get(target) ?? [];
+  }
+
+  getInjectPropAll() {
+    return [...this.injectProps.values()].flat();
   }
 
   getObjectTypeAll() {
@@ -107,4 +114,5 @@ export class MetadataStorage implements MetadataStorable {
   getGraphqlMethod(target: ResolverGraphqlTarget) {
     return this.graphqlMethods.get(target) ?? [];
   }
+  // get end
 }
