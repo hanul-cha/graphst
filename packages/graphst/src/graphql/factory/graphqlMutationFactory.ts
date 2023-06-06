@@ -14,20 +14,20 @@ export class GraphqlMutationFactory implements GraphqlGenerateFactory {
 
   generate() {
     const mutationMethod = this.fieldFactory.getMethod(
-      this.storage.getGraphqlMethod('mutation')
+      this.storage.getGraphqlMethod('Mutation')
     );
 
     return {
       schemes: mutationMethod.fields
         ? [
             new GraphQLObjectType({
-              name: 'mutation',
+              name: 'Mutation',
               fields: mutationMethod.fields,
             }),
           ]
         : [],
       resolvers: mutationMethod.resolverMethods
-        ? [mutationMethod.resolverMethods]
+        ? [{ Mutation: mutationMethod.resolverMethods! }]
         : [],
     };
   }

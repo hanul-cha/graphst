@@ -16,10 +16,18 @@ export class GraphqlObjectFactory implements GraphqlGenerateFactory {
     const schemes = [] as GraphQLNamedType[];
     const resolvers = [] as ResolverValue[];
 
+    // TODO: target이 GraphqlObject일 때 처리 필요
+    const fieldResolvers = this.storage
+      .getFieldResolverAll()
+      .map((resolver) => ({
+        ...resolver,
+        target: resolver.target(),
+      }));
+
     this.storage.getObjectTypeAll().forEach(({ target, name }) => {
       const objectMethod = this.fieldFactory.getMethod([
         ...this.storage.getFields(target),
-        ...this.storage.getFieldResolvers(target),
+        ...fieldResolvers.filter((resolver) => resolver.target === target),
       ]);
 
       if (objectMethod.fields) {

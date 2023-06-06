@@ -41,7 +41,7 @@ export interface FieldResolverTypeMetadata extends FieldResolverMetadata {
   target: FieldResolverTarget;
 }
 
-export type ResolverGraphqlTarget = 'query' | 'mutation' | 'subscription';
+export type ResolverGraphqlTarget = 'Query' | 'Mutation' | 'Subscription';
 export interface ResolverGraphqlTypeMetadata extends FieldResolverMetadata {
   target: ResolverGraphqlTarget;
 }
@@ -62,7 +62,7 @@ export interface MetadataStorable {
   getInjectPropAll: () => MetadataInjectProp[];
   getObjectTypeAll: () => ObjectTypeMetadata[];
   getFields: (target: Function) => FieldTypeMetadata[];
-  getFieldResolvers: (target: Function) => FieldResolverTypeMetadata[];
+  getFieldResolverAll: () => FieldResolverTypeMetadata[];
   getGraphqlMethod: (
     target: ResolverGraphqlTarget
   ) => ResolverGraphqlTypeMetadata[];

@@ -14,20 +14,20 @@ export class GraphqlQueryFactory implements GraphqlGenerateFactory {
 
   generate() {
     const queryMethod = this.fieldFactory.getMethod(
-      this.storage.getGraphqlMethod('query')
+      this.storage.getGraphqlMethod('Query')
     );
 
     return {
       schemes: queryMethod.fields
         ? [
             new GraphQLObjectType({
-              name: 'query',
+              name: 'Query',
               fields: queryMethod.fields,
             }),
           ]
         : [],
       resolvers: queryMethod.resolverMethods
-        ? [queryMethod.resolverMethods]
+        ? [{ Query: queryMethod.resolverMethods! }]
         : [],
     };
   }

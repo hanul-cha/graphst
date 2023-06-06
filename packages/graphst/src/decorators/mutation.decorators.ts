@@ -15,8 +15,8 @@ export function Mutation(option: {
 
     const storage = MetadataStorage.getStorage();
 
-    storage.setGraphqlMethod('mutation', {
-      target: 'mutation',
+    storage.setGraphqlMethod('Mutation', {
+      target: 'Mutation',
       fn: originalMethod,
       name: option.name || propertyKey,
       returnType: option.returnType,

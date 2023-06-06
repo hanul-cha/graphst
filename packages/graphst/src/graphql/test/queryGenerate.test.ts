@@ -1,40 +1,25 @@
-// describe('graphst, Container', () => {
-//   beforeEach(() => {
-//     MetadataStorage.getStorage().clear();
-//   });
+import { Container } from '../../container';
+import { MetadataStorage } from '../../metadata/MetadataStorage';
+import { Project } from '../../test/entity/project';
+import { ProjectResolver } from '../../test/resolver/project.resolver';
+import { GraphqlFactory } from '../factory/graphqlFactory';
 
-//   const container = new Container({
-//     providers: [
-//       Connection,
-//       User,
-//       Log,
-//       Age,
-//       AgeService,
-//       AgeService2,
-//       Project,
-//       ProjectResolver,
-//     ],
-//   });
-//   container.boot();
+describe('graphst, Container', () => {
+  beforeEach(() => {
+    MetadataStorage.getStorage().clear();
+  });
 
-//   // 첫 뎁스의 인젝트 테스트
-//   it('should create container', () => {
-//     const connection = container.getProvider(Connection);
-//     const user = container.getProvider(User);
+  const container = new Container({
+    providers: [Project, ProjectResolver],
+  });
+  container.boot();
 
-//     expect(user.test()).toEqual(12);
-//     expect(connection.doTest(2)).toEqual(2);
-//   });
+  const graphql = container.getProvider(GraphqlFactory);
 
-//   // 두개 이상 뎁스의 인젝트 테스트
-//   it('Dependency injection testing more than once deep', () => {
-//     const user = container.getProvider(User);
-
-//     expect(user.getUserAge()).toEqual(12);
-//   });
-
-//   it('Circular dependency testing', () => {
-//     // TODO: circular dependency test
-//     expect(1).toEqual(1);
-//   });
-// });
+  it('query generate test', () => {
+    const { schemes, resolvers } = graphql.generate();
+    console.log(schemes);
+    console.log(resolvers);
+    expect(1).toEqual(1);
+  });
+});

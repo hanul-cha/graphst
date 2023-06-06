@@ -15,8 +15,8 @@ export function Query(option: {
 
     const storage = MetadataStorage.getStorage();
 
-    storage.setGraphqlMethod('query', {
-      target: 'query',
+    storage.setGraphqlMethod('Query', {
+      target: 'Query',
       fn: originalMethod,
       name: option.name || propertyKey,
       returnType: option.returnType,

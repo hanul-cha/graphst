@@ -27,7 +27,7 @@ export class MetadataStorage implements MetadataStorable {
   private injectProps = new Map<Function, MetadataInjectProp[]>();
   private objectTypes = new Map<Function, ObjectTypeMetadata>();
   private fields = new Map<Function, FieldTypeMetadata[]>();
-  private fieldResolversSet = new Map<Function, FieldResolverTypeMetadata[]>();
+  private fieldResolvers = new Set<FieldResolverTypeMetadata>();
   private graphqlMethods = new Map<
     ResolverGraphqlTarget,
     ResolverGraphqlTypeMetadata[]
@@ -75,14 +75,8 @@ export class MetadataStorage implements MetadataStorable {
     this.fields.set(target, fields);
   }
 
-  setFieldResolver(target: Function, metaData: FieldResolverTypeMetadata) {
-    let fileResolver = this.fieldResolversSet.get(target);
-    if (fileResolver) {
-      fileResolver.push(metaData);
-    } else {
-      fileResolver = [metaData];
-    }
-    this.fieldResolversSet.set(target, fileResolver);
+  setFieldResolver(_target: Function, metaData: FieldResolverTypeMetadata) {
+    this.fieldResolvers.add(metaData);
   }
   // set end
 
@@ -107,8 +101,8 @@ export class MetadataStorage implements MetadataStorable {
     return this.fields.get(target) ?? [];
   }
 
-  getFieldResolvers(target: Function) {
-    return this.fieldResolversSet.get(target) ?? [];
+  getFieldResolverAll() {
+    return [...this.fieldResolvers];
   }
 
   getGraphqlMethod(target: ResolverGraphqlTarget) {
