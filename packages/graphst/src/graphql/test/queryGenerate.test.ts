@@ -14,11 +14,11 @@ describe('graphst, Container', () => {
   });
   container.boot();
 
-  const graphql = container.getProvider(GraphqlFactory);
-
   it('query generate test', () => {
-    const generatedGraphqlSchema = graphql.generate();
-    // console.log(generatedGraphqlSchema.getTypeMap());
+    const generatedGraphqlSchema = container
+      .getProvider(GraphqlFactory)
+      .generate();
+    console.log(generatedGraphqlSchema.getTypeMap());
     expect(1).toEqual(1);
   });
 });

@@ -5,12 +5,13 @@ import {
   GraphQLString,
 } from 'graphql';
 import { FieldResolver } from '../../decorators/fieldResolver.decorators';
+import { Resolver } from '../../decorators/resolver.decorators';
 import { Mutation } from '../../decorators/mutation.decorators';
 import { Query } from '../../decorators/query.decorators';
 import { Project } from '../entity/project';
 import { User } from '../object/user';
 
-// @Injectable()
+@Resolver(() => Project)
 export class ProjectResolver {
   @FieldResolver({
     parent: () => Project,

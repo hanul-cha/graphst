@@ -5,17 +5,22 @@ import { graphql } from 'graphql';
 export interface GraphstOptions<TServerContext> {
   providers?: Function[];
   context?: Promise<TServerContext>;
-  port?: number;
 }
 
 export class GraphstServer<TServerContext extends Record<string, any>> {
+  private container: Container;
+
   constructor(options?: GraphstOptions<TServerContext>) {
     const container = new Container({
       providers: options?.providers ?? [],
     });
     container.boot();
 
-    const graphqlSchema = container.graphqlSchema;
+    this.container = container;
+  }
+
+  start(port: number, callback?: () => void) {
+    const graphqlSchema = this.container.graphqlSchema;
 
     if (!graphqlSchema) {
       throw new Error('GraphQL Schema is not generated');
@@ -48,17 +53,6 @@ export class GraphstServer<TServerContext extends Record<string, any>> {
       }
     });
 
-    const port = options?.port ?? 4000;
-
-    server.listen(port, () => {
-      console.log(`HTTP Server started on port ${port}`);
-    });
+    server.listen(port, callback);
   }
 }
-
-// export function createGraphst<TServerContext extends Record<string, any>>(
-//   options?: GraphstOptions<TServerContext>
-// ): GraphstServer<TServerContext> {
-//   const server = new GraphstServer(options);
-//   return server;
-// }

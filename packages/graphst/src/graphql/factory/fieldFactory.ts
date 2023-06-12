@@ -19,11 +19,11 @@ export class FieldFactory {
     }[]
   ) {
     const fields: Thunk<GraphQLFieldConfigMap<any, any>> = {};
-    const resolverMethods = {};
+    const resolverMethods: { [key: string]: Function } = {};
 
     props.forEach(({ name, returnType, fn, args }) => {
       const methodName = typeof name === 'symbol' ? name.toString() : name;
-      const filedArg = {};
+      const filedArg: { [key: string]: { type: any } } = {};
       const argsEntries = args ? Object.entries(args) : [];
 
       argsEntries.forEach(([key, graphQLInput]) => {

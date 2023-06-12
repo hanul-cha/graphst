@@ -1,11 +1,10 @@
-import { createServer } from 'node:http';
-import { createGraphst } from '../../../packages/graphst/src/index';
-import { User } from './user/user.entity';
+import { Container } from '../../../packages/graphst/src/container';
+import { GraphstServer } from '../../../packages/graphst/src/index';
+import { Project } from '../../../packages/graphst/src/test/entity/project';
+import { ProjectResolver } from '../../../packages/graphst/src/test/resolver/project.resolver';
 
-const graphst = createGraphst({ providers: [User] });
+// const server = new GraphstServer();
 
-const server = createServer(graphst);
-
-server.listen(4000, () => {
-  console.info('Server is running on http://localhost:4000/graphql');
-});
+// server.start(4000, () => {
+//   console.info('Server is running on http://localhost:4000/graphql');
+// });
