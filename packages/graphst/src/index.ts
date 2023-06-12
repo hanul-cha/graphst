@@ -1,1 +1,1 @@
-export { createGraphst } from './server';
+export { GraphstServer } from './server';

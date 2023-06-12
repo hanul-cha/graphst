@@ -1,3 +1,4 @@
+import { GraphQLSchema } from 'graphql';
 import { GraphqlFactory } from '../graphql/factory/graphqlFactory';
 import { graphqlInjectList } from '../graphql/graphqlInjectList';
 import { ConstructType } from '../interfaces/type';
@@ -7,6 +8,7 @@ import { ContainerOptions } from './interfaces';
 export class Container {
   private storage = MetadataStorage.getStorage();
   private providerInstances = new WeakMap<Function, any>();
+  graphqlSchema: null | GraphQLSchema = null;
 
   constructor(private readonly containerOptions: ContainerOptions) {}
 
@@ -17,7 +19,7 @@ export class Container {
     ];
     this.factory();
     this.resolve();
-    this.getProvider(GraphqlFactory).generate();
+    this.graphqlSchema = this.getProvider(GraphqlFactory).generate();
   }
 
   private factory() {

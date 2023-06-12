@@ -14,6 +14,8 @@ export interface ResolverValue {
 export interface GraphqlGenerateFactory {
   generate: () => {
     schemes: GraphQLNamedType[];
-    resolvers: ResolverValue[];
+    resolvers: {
+      [key: string]: ResolverValue;
+    };
   };
 }

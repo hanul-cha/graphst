@@ -26,9 +26,7 @@ export class GraphqlMutationFactory implements GraphqlGenerateFactory {
             }),
           ]
         : [],
-      resolvers: mutationMethod.resolverMethods
-        ? [{ Mutation: mutationMethod.resolverMethods! }]
-        : [],
+      resolvers: { Mutation: mutationMethod.resolverMethods ?? {} },
     };
   }
 }

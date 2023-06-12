@@ -1,3 +1,6 @@
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { GraphQLSchema, printSchema } from 'graphql';
+import { gql } from 'graphql-tag';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { GraphqlMutationFactory } from './graphqlMutationFactory';
@@ -16,15 +19,31 @@ export class GraphqlFactory {
   mutationFactory!: GraphqlMutationFactory;
 
   generate() {
-    const graphqlList = [
-      this.objectFactory.generate(),
-      this.queryFactory.generate(),
-      this.mutationFactory.generate(),
-    ];
+    const mutation = this.mutationFactory.generate();
+    const query = this.queryFactory.generate();
+    const object = this.objectFactory.generate();
 
-    return {
-      schemes: graphqlList.map((item) => item.schemes).flat(),
-      resolvers: graphqlList.map((item) => item.resolvers).flat(),
-    };
+    const schema = new GraphQLSchema({
+      mutation: mutation.schemes[0],
+      query: query.schemes[0],
+      // TODO: 다른 커스텀 타입 추가
+      types: [...object.schemes],
+    });
+
+    const resolvers = Object.assign(
+      {},
+      mutation.resolvers,
+      query.resolvers,
+      object.resolvers
+    );
+
+    const schemas = makeExecutableSchema({
+      typeDefs: gql`
+        ${printSchema(schema)}
+      `,
+      resolvers,
+    });
+
+    return schemas;
   }
 }

@@ -39,30 +39,54 @@ export class ProjectResolver {
   }
 
   @Query({
+    args: {
+      id: () => GraphQLInt,
+    },
     returnType: () => GraphQLInt,
   })
-  projectAll(id: number): number {
-    if (id > 0) {
+  projectAll(
+    _: null,
+    args: {
+      id: number;
+    }
+  ): number {
+    if (args.id > 0) {
       return 0;
     }
     return 1;
   }
 
   @Query({
+    args: {
+      id: () => GraphQLInt,
+    },
     returnType: () => GraphQLString,
   })
-  projectName(id: number): string {
-    if (id === 1) {
+  projectName(
+    _: null,
+    args: {
+      id: number;
+    }
+  ): string {
+    if (args.id === 1) {
       return '테스트 프로젝트';
     }
     return '???';
   }
 
   @Mutation({
+    args: {
+      id: () => GraphQLInt,
+    },
     returnType: () => GraphQLString,
   })
-  setProject(id: number): string {
-    if (id === 1) {
+  setProject(
+    _: null,
+    args: {
+      id: number;
+    }
+  ): string {
+    if (args.id === 1) {
       return '테스트 프로젝트';
     }
     return '???';

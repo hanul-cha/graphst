@@ -14,7 +14,9 @@ export class GraphqlObjectFactory implements GraphqlGenerateFactory {
 
   generate() {
     const schemes = [] as GraphQLNamedType[];
-    const resolvers = [] as ResolverValue[];
+    const resolvers: {
+      [key: string]: ResolverValue;
+    } = {};
 
     // TODO: target이 GraphqlObject일 때 처리 필요
     const fieldResolvers = this.storage
@@ -40,7 +42,7 @@ export class GraphqlObjectFactory implements GraphqlGenerateFactory {
       }
 
       if (objectMethod.resolverMethods) {
-        resolvers.push({ [name]: objectMethod.resolverMethods });
+        resolvers[name] = objectMethod.resolverMethods;
       }
     });
 

@@ -17,9 +17,8 @@ describe('graphst, Container', () => {
   const graphql = container.getProvider(GraphqlFactory);
 
   it('query generate test', () => {
-    const { schemes, resolvers } = graphql.generate();
-    console.log(schemes);
-    console.log(resolvers);
+    const generatedGraphqlSchema = graphql.generate();
+    // console.log(generatedGraphqlSchema.getTypeMap());
     expect(1).toEqual(1);
   });
 });
