@@ -7,25 +7,13 @@ import { Connection } from './object/connect';
 import { Log } from './object/log';
 import { Project } from './entity/project';
 import { User } from './object/user';
-import { ProjectResolver } from './resolver/project.resolver';
 
 describe('graphst, Container', () => {
-  beforeEach(() => {
-    MetadataStorage.getStorage().clear();
-  });
+  // beforeEach(() => {
+  //   MetadataStorage.getStorage().clear();
+  // });
 
-  const container = new Container({
-    providers: [
-      Connection,
-      User,
-      Log,
-      Age,
-      AgeService,
-      AgeService2,
-      Project,
-      ProjectResolver,
-    ],
-  });
+  const container = new Container({});
   container.boot();
 
   // 첫 뎁스의 인젝트 테스트

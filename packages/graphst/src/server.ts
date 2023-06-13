@@ -1,5 +1,5 @@
 import { Container } from './container';
-import { createServer } from 'node:http';
+import { createServer, Server } from 'node:http';
 import { graphql } from 'graphql';
 
 export interface GraphstOptions<TServerContext> {
@@ -9,6 +9,7 @@ export interface GraphstOptions<TServerContext> {
 
 export class GraphstServer<TServerContext extends Record<string, any>> {
   private container: Container;
+  private server: Server | null = null;
 
   constructor(options?: GraphstOptions<TServerContext>) {
     const container = new Container({
@@ -26,7 +27,7 @@ export class GraphstServer<TServerContext extends Record<string, any>> {
       throw new Error('GraphQL Schema is not generated');
     }
 
-    const server = createServer((req, res) => {
+    this.server = createServer((req, res) => {
       if (req.method === 'POST') {
         let body = '';
         req.on('data', (chunk) => {
@@ -53,6 +54,13 @@ export class GraphstServer<TServerContext extends Record<string, any>> {
       }
     });
 
-    server.listen(port, callback);
+    this.server.listen(port, callback);
+  }
+
+  stop() {
+    if (this.server) {
+      this.server.close();
+      this.server = null;
+    }
   }
 }
