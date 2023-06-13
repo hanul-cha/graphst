@@ -57,7 +57,7 @@ export interface MetadataStorable {
     ResolverGraphqlTarget
   >;
 
-  getProvider: (target: Function) => ProviderMetadata | undefined;
+  getProviderAll: () => ProviderMetadata[];
   getInjectProps: (target: Function) => MetadataInjectProp[];
   getInjectPropAll: () => MetadataInjectProp[];
   getObjectTypeAll: () => ObjectTypeMetadata[];

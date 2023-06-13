@@ -81,8 +81,8 @@ export class MetadataStorage implements MetadataStorable {
   // set end
 
   // get
-  getProvider(target: Function) {
-    return this.providers.get(target);
+  getProviderAll() {
+    return [...this.providers.values()];
   }
 
   getInjectProps(target: Function) {

@@ -1,6 +1,7 @@
 import { Container } from './container';
 import { createServer, Server } from 'node:http';
 import { graphql } from 'graphql';
+import { GraphqlFactory } from './graphql/factory/graphqlFactory';
 
 export interface GraphstOptions<TServerContext> {
   providers?: Function[];
@@ -21,7 +22,7 @@ export class GraphstServer<TServerContext extends Record<string, any>> {
   }
 
   start(port: number, callback?: () => void) {
-    const graphqlSchema = this.container.graphqlSchema;
+    const graphqlSchema = this.container.getProvider(GraphqlFactory).generate();
 
     if (!graphqlSchema) {
       throw new Error('GraphQL Schema is not generated');

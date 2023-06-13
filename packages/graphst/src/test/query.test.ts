@@ -1,4 +1,3 @@
-import { MetadataStorage } from '../metadata/metadataStorage';
 import { FieldResolver } from '../decorators/fieldResolver.decorators';
 import {
   GraphQLBoolean,
@@ -12,6 +11,7 @@ import { Query } from '../decorators/query.decorators';
 import { ObjectType } from '../decorators/objectType.decorators';
 import { Field } from '../decorators/field.decorators';
 import { GraphstServer } from '../server';
+import { Resolver } from '../decorators/resolver.decorators';
 
 describe('graphst, Query', () => {
   let server;
@@ -25,6 +25,7 @@ describe('graphst, Query', () => {
     name!: string;
   }
 
+  @Resolver(() => Project)
   class ProjectResolver {
     @FieldResolver({
       parent: () => Project,

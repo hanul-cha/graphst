@@ -1,6 +1,3 @@
-import { GraphQLSchema } from 'graphql';
-import { GraphqlFactory } from '../graphql/factory/graphqlFactory';
-import { graphqlInjectList } from '../graphql/graphqlInjectList';
 import { ConstructType } from '../interfaces/type';
 import { MetadataStorage } from '../metadata/MetadataStorage';
 import { ContainerOptions } from './interfaces';
@@ -9,30 +6,18 @@ export class Container {
   private storage = MetadataStorage.getStorage();
   private providerInstances = new WeakMap<Function, any>();
 
-  graphqlSchema: null | GraphQLSchema = null;
-
   constructor(private readonly containerOptions: ContainerOptions) {}
 
   boot() {
-    this.containerOptions.providers = [
-      ...(this.containerOptions.providers ?? []),
-      ...graphqlInjectList,
-    ];
+    // TODO: provider를 어떻게 사용할지...
     this.factory();
     this.resolve();
-    this.graphqlSchema = this.getProvider(GraphqlFactory).generate();
   }
 
   private factory() {
     // 데코레이터로 수집한 객체가 있다면  인스턴스화 해서 모아놓음
-    this.containerOptions.providers?.forEach((provider) => {
-      const metadata = this.storage.getProvider(provider);
-
-      if (metadata) {
-        const instance = new metadata.target();
-        // metadata.middleware()
-        this.providerInstances.set(provider, instance);
-      }
+    this.storage.getProviderAll().forEach(({ target }) => {
+      this.providerInstances.set(target, new target());
     });
   }
 
