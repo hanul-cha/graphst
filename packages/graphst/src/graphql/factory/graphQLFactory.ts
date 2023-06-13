@@ -34,6 +34,8 @@ export class GraphqlFactory {
       types: [...object.schemes, ...this.storage.getGraphqlCustomTypeAll()],
     });
 
+    console.log(printSchema(schema));
+
     const resolvers = Object.assign(
       {},
       mutation.resolvers,
