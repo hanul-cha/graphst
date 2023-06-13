@@ -3,12 +3,15 @@ import { GraphQLSchema, printSchema } from 'graphql';
 import { gql } from 'graphql-tag';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
+import { MetadataStorage } from '../../metadata/MetadataStorage';
 import { GraphqlMutationFactory } from './graphqlMutationFactory';
 import { GraphqlObjectFactory } from './graphqlObjectFactory';
 import { GraphqlQueryFactory } from './graphqlQueryFactory';
 
 @Injectable()
 export class GraphqlFactory {
+  private storage = MetadataStorage.getStorage();
+
   @Inject(() => GraphqlObjectFactory)
   objectFactory!: GraphqlObjectFactory;
 
@@ -19,15 +22,16 @@ export class GraphqlFactory {
   mutationFactory!: GraphqlMutationFactory;
 
   generate() {
+    // 무조건 첫순서여야함 -> objectFactory에서 만든 Graphql타입을 query, mutation에서 사용할 수 있음
+    const object = this.objectFactory.generate();
     const mutation = this.mutationFactory.generate();
     const query = this.queryFactory.generate();
-    const object = this.objectFactory.generate();
 
     const schema = new GraphQLSchema({
       mutation: mutation.schemes[0],
       query: query.schemes[0],
-      // TODO: 다른 커스텀 타입 추가
-      types: [...object.schemes],
+      // TODO: 다른 커스텀 타입 추가 => storage안에 있음
+      types: [...object.schemes, ...this.storage.getGraphqlCustomTypeAll()],
     });
 
     const resolvers = Object.assign(

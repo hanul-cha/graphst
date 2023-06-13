@@ -2,7 +2,7 @@ import { GraphQLInputType, GraphQLOutputType } from 'graphql';
 import { MetadataStorage } from '../metadata/metadataStorage';
 
 export function Query(option: {
-  returnType: () => GraphQLOutputType;
+  returnType: () => GraphQLOutputType | Function;
   args?: Record<string, () => GraphQLInputType>;
   name?: string;
 }): MethodDecorator {

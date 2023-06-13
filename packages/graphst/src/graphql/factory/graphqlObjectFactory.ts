@@ -33,12 +33,12 @@ export class GraphqlObjectFactory implements GraphqlGenerateFactory {
       ]);
 
       if (objectMethod.fields) {
-        schemes.push(
-          new GraphQLObjectType({
-            name,
-            fields: objectMethod.fields,
-          })
-        );
+        const graphqlEntity = new GraphQLObjectType({
+          name,
+          fields: objectMethod.fields,
+        });
+        schemes.push(graphqlEntity);
+        this.storage.setGraphqlEntityType(target, graphqlEntity);
       }
 
       if (objectMethod.resolverMethods) {

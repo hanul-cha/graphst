@@ -4,7 +4,7 @@ import { MetadataStorage } from '../metadata/MetadataStorage';
 
 export function FieldResolver(options: {
   parent: () => GraphQLEntityType | Function;
-  returnType: () => GraphQLOutputType;
+  returnType: () => GraphQLOutputType | Function;
   args?: Record<string, () => GraphQLInputType>;
   name?: string;
 }): MethodDecorator {
