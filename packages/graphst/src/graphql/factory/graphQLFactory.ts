@@ -11,6 +11,7 @@ import { GraphqlQueryFactory } from './graphqlQueryFactory';
 @Injectable()
 export class GraphqlFactory {
   private storage = MetadataStorage.getStorage();
+  private graphqlSchema!: GraphQLSchema;
 
   @Inject(() => GraphqlObjectFactory)
   objectFactory!: GraphqlObjectFactory;
@@ -30,11 +31,10 @@ export class GraphqlFactory {
     const schema = new GraphQLSchema({
       mutation: mutation.schemes[0],
       query: query.schemes[0],
-      // TODO: 다른 커스텀 타입 추가 => storage안에 있음
       types: [...object.schemes, ...this.storage.getGraphqlCustomTypeAll()],
     });
 
-    console.log(printSchema(schema));
+    this.graphqlSchema = schema;
 
     const resolvers = Object.assign(
       {},
@@ -51,5 +51,9 @@ export class GraphqlFactory {
     });
 
     return schemas;
+  }
+
+  getSchema() {
+    return this.graphqlSchema;
   }
 }

@@ -101,7 +101,68 @@ class Project {
 ```
 
 ## Auto Custom Graphql Type
-TODO
+> Automatic registration of user-defined GraphQL types in the schema
+```ts
+enum LogType {
+  INFO = 'info',
+  ERROR = 'error',
+}
+
+const GraphqlLogType = new GraphQLEnumType({
+  name: 'LogType',
+  values: {
+    INFO: { value: LogType.INFO },
+    ERROR: { value: LogType.ERROR },
+  },
+});
+
+const GraphqlInputLogType = new GraphQLInputObjectType({
+  name: 'InputLogType',
+  fields: {
+    type: { type: GraphqlLogType, description: 'log type' },
+  },
+});
+
+const GraphqlTestObject = new GraphQLObjectType({
+  name: 'TestObject',
+  fields: {
+    name: { type: GraphQLString },
+  },
+});
+
+@ObjectType('Log')
+class Log {
+  @Field(() => GraphqlLogType)
+  getLog!: LogType;
+}
+
+@Mutation({
+  args: {
+    names: () => GraphqlInputLogType,
+  },
+  // Automatic detection and addition of underlying types when using `GraphqlList`
+  returnType: () => GraphQLList(GraphqlTestObject),
+})
+```
+```gql
+type Log {
+  getLog: LogType
+}
+
+enum LogType {
+  INFO
+  ERROR
+}
+
+input InputLogType {
+  """log type"""
+  type: LogType
+}
+
+type TestObject {
+  name: String
+}
+```
 
 ## Context & MiddleWare
 TODO
