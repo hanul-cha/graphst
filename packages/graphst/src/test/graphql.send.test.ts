@@ -11,46 +11,7 @@ import { ObjectType } from '../decorators/objectType.decorators';
 import { Field } from '../decorators/field.decorators';
 import { GraphstServer } from '../server';
 import { Resolver } from '../decorators/resolver.decorators';
-import http from 'http';
-
-async function sendGraphQLRequest(
-  query: string,
-  variables?: Record<string, any>
-): Promise<any> {
-  const requestBody = JSON.stringify({ query, variables });
-
-  const options = {
-    hostname: 'localhost',
-    port: 4000,
-    path: '/graphql',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(requestBody),
-    },
-  };
-
-  return new Promise((resolve, reject) => {
-    const req = http.request(options, (res) => {
-      let responseData = '';
-
-      res.on('data', (chunk) => {
-        responseData += chunk;
-      });
-
-      res.on('end', () => {
-        resolve(JSON.parse(responseData));
-      });
-    });
-
-    req.on('error', (error) => {
-      reject(error);
-    });
-
-    req.write(requestBody);
-    req.end();
-  });
-}
+import { sendGraphQLRequest } from './utile';
 
 describe('graphst, Query', () => {
   let server;

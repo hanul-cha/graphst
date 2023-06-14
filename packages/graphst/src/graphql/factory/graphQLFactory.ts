@@ -29,8 +29,8 @@ export class GraphqlFactory {
     const query = this.queryFactory.generate();
 
     const schema = new GraphQLSchema({
-      mutation: mutation.schemes[0],
-      query: query.schemes[0],
+      mutation: mutation.schemes[0] ?? null,
+      query: query.schemes[0] ?? null,
       types: [...object.schemes, ...this.storage.getGraphqlCustomTypeAll()],
     });
 
@@ -38,8 +38,8 @@ export class GraphqlFactory {
 
     const resolvers = Object.assign(
       {},
-      mutation.resolvers,
-      query.resolvers,
+      ...(mutation.resolvers ? [mutation.resolvers] : []),
+      ...(query.resolvers ? [query.resolvers] : []),
       object.resolvers
     );
 

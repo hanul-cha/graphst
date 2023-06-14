@@ -32,7 +32,9 @@ export class GraphqlQueryFactory implements GraphqlGenerateFactory {
             }),
           ]
         : [],
-      resolvers: { Query: queryMethod.resolverMethods ?? {} },
+      resolvers: queryMethod.resolverMethods
+        ? { Query: queryMethod.resolverMethods }
+        : null,
     };
   }
 }
