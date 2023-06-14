@@ -2,7 +2,8 @@ import http from 'node:http';
 
 export async function sendGraphQLRequest(
   query: string,
-  variables?: Record<string, any>
+  variables?: Record<string, any>,
+  token?: string
 ): Promise<any> {
   const requestBody = JSON.stringify({ query, variables });
 
@@ -14,6 +15,7 @@ export async function sendGraphQLRequest(
     headers: {
       'Content-Type': 'application/json',
       'Content-Length': Buffer.byteLength(requestBody),
+      Authorization: `${token ?? ''}`,
     },
   };
 

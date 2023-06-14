@@ -2,15 +2,24 @@ import { Container } from './container';
 import { createServer, Server } from 'node:http';
 import { graphql } from 'graphql';
 import { GraphqlFactory } from './graphql/factory/graphqlFactory';
+import { GraphstContext } from './context/GraphstContext';
 
 export interface GraphstOptions<TServerContext> {
   providers?: Function[];
-  context?: Promise<TServerContext>;
+  context?: TServerContext;
 }
 
-export class GraphstServer<TServerContext extends Record<string, any>> {
+export type ContextCallback = new () => GraphstContext;
+
+export class GraphstServer<
+  T extends string,
+  TServerContext extends {
+    [key in T]: ContextCallback;
+  }
+> {
   private container: Container;
   private server: Server | null = null;
+  private context: TServerContext | null = null;
 
   constructor(options?: GraphstOptions<TServerContext>) {
     const container = new Container({
@@ -18,6 +27,9 @@ export class GraphstServer<TServerContext extends Record<string, any>> {
     });
     container.boot();
 
+    if (options?.context) {
+      this.context = options.context;
+    }
     this.container = container;
   }
 
@@ -29,6 +41,19 @@ export class GraphstServer<TServerContext extends Record<string, any>> {
     }
 
     this.server = createServer((req, res) => {
+      const context = { req };
+
+      if (this.context) {
+        const entries = Object.entries(this.context) as [
+          string,
+          ContextCallback
+        ][];
+
+        for (const [key, fn] of entries) {
+          context[key] = new fn().result(req);
+        }
+      }
+
       if (req.method === 'POST') {
         let body = '';
         req.on('data', (chunk) => {
@@ -42,7 +67,7 @@ export class GraphstServer<TServerContext extends Record<string, any>> {
             graphqlSchema,
             query,
             null,
-            null,
+            context,
             variables
           );
 
