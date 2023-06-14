@@ -2,7 +2,6 @@ import {
   GraphQLInputType,
   GraphQLObjectType,
   GraphQLOutputType,
-  GraphQLType,
   GraphQLScalarType,
   GraphQLInterfaceType,
   GraphQLUnionType,
@@ -11,6 +10,10 @@ import {
 } from 'graphql';
 import { GraphQLEntityType, Type } from '../interfaces/type';
 
+export enum providerType {
+  RESOLVER = 'RESOLVER',
+}
+
 export type SetMetaDataFunction<T, U = Function> = (
   target: U,
   metaData: T
@@ -18,6 +21,7 @@ export type SetMetaDataFunction<T, U = Function> = (
 
 export interface ProviderMetadata {
   target: Type;
+  type?: providerType;
 }
 
 export interface MetadataInjectProp {
@@ -34,6 +38,7 @@ export interface ObjectTypeMetadata {
 export interface FieldTypeMetadata {
   name: string | symbol;
   returnType: () => GraphQLOutputType;
+  description?: string;
 }
 
 export type FieldResolverTarget = () => GraphQLEntityType | Function;
@@ -45,6 +50,7 @@ export interface FieldResolverMetadata {
   args?: {
     [key: string]: () => GraphQLInputType;
   };
+  description?: string;
 }
 
 export interface FieldResolverTypeMetadata extends FieldResolverMetadata {
@@ -54,6 +60,7 @@ export interface FieldResolverTypeMetadata extends FieldResolverMetadata {
 export type ResolverGraphqlTarget = 'Query' | 'Mutation' | 'Subscription';
 export interface ResolverGraphqlTypeMetadata extends FieldResolverMetadata {
   target: ResolverGraphqlTarget;
+  resolver: Function;
 }
 
 export type GraphqlCusComType =
@@ -88,6 +95,7 @@ export interface MetadataStorable {
   ) => ResolverGraphqlTypeMetadata[];
   getGraphqlEntityType: (target: Function) => GraphQLObjectType | undefined;
   getGraphqlCustomTypeAll: () => GraphqlCusComType[];
+  getResolverAll: () => ProviderMetadata[];
 
   clear: () => void;
 }

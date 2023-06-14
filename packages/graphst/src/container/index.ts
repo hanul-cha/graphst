@@ -9,7 +9,7 @@ export class Container {
   constructor(private readonly containerOptions: ContainerOptions) {}
 
   boot() {
-    // TODO: provider를 어떻게 사용할지...
+    // TODO: provider를 밖에서 생성된 인스턴스를 주입받을 수 있도록
     this.factory();
     this.resolve();
   }

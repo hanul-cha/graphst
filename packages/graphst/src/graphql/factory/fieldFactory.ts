@@ -24,12 +24,13 @@ export class FieldFactory {
       args?: {
         [key: string]: () => GraphQLInputType;
       };
+      description?: string;
     }[]
   ) {
     const fields: Thunk<GraphQLFieldConfigMap<any, any>> = {};
     const resolverMethods: { [key: string]: Function } = {};
 
-    props.forEach(({ name, returnType, fn, args }) => {
+    props.forEach(({ name, returnType, fn, args, description }) => {
       const methodName = typeof name === 'symbol' ? name.toString() : name;
       const filedArg: { [key: string]: { type: any } } = {};
       const argsEntries = args ? Object.entries(args) : [];
@@ -56,6 +57,7 @@ export class FieldFactory {
 
       fields[methodName] = {
         type: returnTypeValue,
+        description,
         ...(argsEntries.length > 0 ? { args: filedArg } : {}),
       };
     });

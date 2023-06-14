@@ -7,6 +7,7 @@ export function FieldResolver(options: {
   returnType: () => GraphQLOutputType | Function;
   args?: Record<string, () => GraphQLInputType>;
   name?: string;
+  description?: string;
 }): MethodDecorator {
   return (
     _target: object,
@@ -22,6 +23,7 @@ export function FieldResolver(options: {
       fn: originalMethod,
       returnType: options.returnType,
       args: options.args,
+      description: options.description,
     });
   };
 }

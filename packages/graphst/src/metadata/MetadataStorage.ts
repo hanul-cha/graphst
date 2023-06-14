@@ -6,6 +6,7 @@ import {
   MetadataInjectProp,
   ObjectTypeMetadata,
   ProviderMetadata,
+  providerType,
   ResolverGraphqlTarget,
   ResolverGraphqlTypeMetadata,
 } from './interfaces';
@@ -127,6 +128,12 @@ export class MetadataStorage implements MetadataStorable {
 
   getGraphqlCustomTypeAll() {
     return [...this.graphqlCustomTypes];
+  }
+
+  getResolverAll() {
+    return [...this.providers.values()].filter(
+      ({ type }) => type && type === providerType.RESOLVER
+    );
   }
   // get end
 }

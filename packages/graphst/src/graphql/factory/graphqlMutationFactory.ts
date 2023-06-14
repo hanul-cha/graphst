@@ -13,9 +13,15 @@ export class GraphqlMutationFactory implements GraphqlGenerateFactory {
   fieldFactory!: FieldFactory;
 
   generate() {
-    const mutationMethod = this.fieldFactory.getMethod(
-      this.storage.getGraphqlMethod('Mutation')
+    const resolvers = this.storage.getResolverAll();
+    const mutations = this.storage.getGraphqlMethod('Mutation');
+
+    //TODO: resolver 단위의 middleware 처리
+    const filteredMutations = resolvers.flatMap(({ target }) =>
+      mutations.filter(({ resolver }) => resolver === target)
     );
+
+    const mutationMethod = this.fieldFactory.getMethod(filteredMutations);
 
     return {
       schemes: mutationMethod.fields

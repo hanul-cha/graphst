@@ -8,6 +8,7 @@ import {
 } from 'graphql';
 import { Container } from '../container';
 import { Field } from '../decorators/field.decorators';
+import { FieldResolver } from '../decorators/fieldResolver.decorators';
 import { Mutation } from '../decorators/mutation.decorators';
 import { ObjectType } from '../decorators/objectType.decorators';
 import { Query } from '../decorators/query.decorators';
@@ -47,6 +48,7 @@ describe('graphst, auto.type.test', () => {
   class testClass {
     @Query({
       returnType: () => GraphQLString,
+      description: '쿼리 테스트',
     })
     test() {
       return 'test';
@@ -56,16 +58,29 @@ describe('graphst, auto.type.test', () => {
       args: {
         names: () => GraphqlInputLogType,
       },
+      description: '뮤테이션 테스트',
       returnType: () => GraphQLList(GraphqlTestObject),
     })
     test1() {
       return 'test';
     }
+
+    @FieldResolver({
+      parent: () => Log,
+      returnType: () => GraphQLString,
+      description: '필드 테스트',
+    })
+    do() {
+      return '1';
+    }
   }
 
   @ObjectType('Log')
   class Log {
-    @Field(() => GraphqlLogType)
+    @Field({
+      returnType: () => GraphqlLogType,
+      description: '일반 필드 테스트',
+    })
     getLog!: LogType;
   }
   // 여기까지 test용 클래스

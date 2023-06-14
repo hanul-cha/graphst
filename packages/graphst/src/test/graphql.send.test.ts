@@ -57,10 +57,14 @@ describe('graphst, Query', () => {
 
   @ObjectType()
   class Project {
-    @Field(() => GraphQLInt)
+    @Field({
+      returnType: () => GraphQLInt,
+    })
     id!: number;
 
-    @Field(() => GraphQLString)
+    @Field({
+      returnType: () => GraphQLString,
+    })
     name!: string;
   }
 

@@ -13,9 +13,15 @@ export class GraphqlQueryFactory implements GraphqlGenerateFactory {
   fieldFactory!: FieldFactory;
 
   generate() {
-    const queryMethod = this.fieldFactory.getMethod(
-      this.storage.getGraphqlMethod('Query')
+    const resolvers = this.storage.getResolverAll();
+    const queries = this.storage.getGraphqlMethod('Query');
+
+    //TODO: resolver 단위의 middleware 처리
+    const filteredQueries = resolvers.flatMap(({ target }) =>
+      queries.filter(({ resolver }) => resolver === target)
     );
+
+    const queryMethod = this.fieldFactory.getMethod(filteredQueries);
 
     return {
       schemes: queryMethod.fields
