@@ -1,9 +1,10 @@
 import { Container } from './container';
 import { createServer, Server } from 'node:http';
 import { graphql } from 'graphql';
-import { GraphstContext } from './context/GraphstContext';
+import { GraphstContextClass } from './context/GraphstContext';
 import { GraphqlFactory } from './graphql/factory/graphqlFactory';
 import { MiddlewareClass } from './middleware/middleware';
+import { MetadataStorage } from './metadata/MetadataStorage';
 
 export interface GraphstOptions<TServerContext> {
   providers?: Function[];
@@ -12,7 +13,7 @@ export interface GraphstOptions<TServerContext> {
   middlewares?: MiddlewareClass[];
 }
 
-export type ContextCallback = new () => GraphstContext;
+export type ContextCallback = new () => GraphstContextClass;
 
 export class GraphstServer<
   T extends string,
@@ -20,6 +21,7 @@ export class GraphstServer<
     [key in T]: ContextCallback;
   }
 > {
+  private storage = MetadataStorage.getStorage();
   private container: Container;
   private server: Server | null = null;
   private context: TServerContext | null = null;
@@ -30,10 +32,9 @@ export class GraphstServer<
     });
     container.boot();
 
-    if (options?.context) {
-      this.context = options.context;
-    }
+    this.context = options?.context ?? null;
     this.container = container;
+    this.storage.setGlobalMiddlewares(options?.middlewares ?? []);
   }
 
   start(port: number, callback?: () => void) {

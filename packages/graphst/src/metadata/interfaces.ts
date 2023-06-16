@@ -9,6 +9,7 @@ import {
   GraphQLInputObjectType,
 } from 'graphql';
 import { GraphQLEntityType, Type } from '../interfaces/type';
+import { MiddlewareClass } from '../middleware/middleware';
 
 export enum providerType {
   RESOLVER = 'RESOLVER',
@@ -83,6 +84,7 @@ export interface MetadataStorable {
   >;
   setGraphqlEntityType: SetMetaDataFunction<GraphQLObjectType>;
   setGraphqlCustomType: (type: GraphqlCusComType) => void;
+  setGlobalMiddlewares: (middlewares: MiddlewareClass[]) => void;
 
   getProviderAll: () => ProviderMetadata[];
   getInjectProps: (target: Function) => MetadataInjectProp[];
@@ -96,6 +98,7 @@ export interface MetadataStorable {
   getGraphqlEntityType: (target: Function) => GraphQLObjectType | undefined;
   getGraphqlCustomTypeAll: () => GraphqlCusComType[];
   getResolverAll: () => ProviderMetadata[];
+  getGlobalMiddlewares: () => MiddlewareClass[];
 
   clear: () => void;
 }

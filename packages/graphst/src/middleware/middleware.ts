@@ -1,58 +1,36 @@
 import { IncomingMessage } from 'node:http';
-import { Injectable } from '../decorators/injectable.decorators';
 
-export type MiddlewareContext = {
-  req: IncomingMessage;
-  [key: string]: any;
+export type GraphstProps = {
+  parent: any;
+  args: any;
+  info: any;
+  context: {
+    req: IncomingMessage;
+    [key: string]: any;
+  };
 };
 
-export abstract class MiddlewareClass {
-  abstract handle(
-    context: MiddlewareContext,
-    next: (context: MiddlewareContext) => void
+export interface MiddlewareInterface {
+  handle(
+    context: GraphstProps,
+    next: (context?: GraphstProps) => void
   ): void | Promise<void>;
 }
 
-/*
-TODO
-결국 resolver에만 필요한거다
-getProject(...) {
+export type MiddlewareClass = new () => MiddlewareInterface;
 
-}
-
-getProject를 graphql엔진이 호출할 것임 거기에
-밑에 있는걸 호출하게 하면되지
-(...) => {
-    const 미들웨어
-    return resolver(...)
-}
-*/
-
-export function resolver(parent: any, args: any, context: any, info: any) {
-  return execute(middlewares, { parent, args, context, info }, resolver, lock);
-}
-
-export class GraphstMiddleware {
-  async execute(
-    middlewares: MiddlewareClass[],
-    context: {
-      parent: any;
-      args: any;
-      context: any;
-      info: any;
-    },
-    resolver: any,
-    done: () => Promise<any>
-  ) {
-    if (middlewares.length > 0) {
-      const [middleware, ...nestMiddlewares] = middlewares;
-      return Promise.resolve(
-        await middleware.handle(context, (handlerContext) => {
-          return this.execute(nestMiddlewares, handlerContext, resolver, done);
-        })
-      );
-    } else {
-      return done().then(() => resolver(...context));
-    }
+export async function middlewareExecute(
+  context: GraphstProps,
+  middlewares: MiddlewareClass[],
+  resolver: Function
+) {
+  if (middlewares.length > 0) {
+    const [middleware, ...nextMiddlewares] = middlewares;
+    return Promise.resolve(
+      await new middleware().handle(context, (handlerContext) =>
+        middlewareExecute(handlerContext ?? context, nextMiddlewares, resolver)
+      )
+    );
   }
+  return resolver(context.parent, context.args, context.context, context.info);
 }

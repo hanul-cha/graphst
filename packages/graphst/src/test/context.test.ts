@@ -5,7 +5,7 @@ import { Field } from '../decorators/field.decorators';
 import { GraphstServer } from '../server';
 import { Resolver } from '../decorators/resolver.decorators';
 import { sendGraphQLRequest } from './utile';
-import { GraphstContext } from '../context/GraphstContext';
+import { GraphstContextClass } from '../context/GraphstContext';
 import { IncomingMessage } from 'http';
 
 describe('graphst, context.test', () => {
@@ -34,7 +34,7 @@ describe('graphst, context.test', () => {
     }
   }
 
-  class AuthTokenContext implements GraphstContext {
+  class AuthTokenContext implements GraphstContextClass {
     result(req: IncomingMessage) {
       return req.headers.authorization;
     }

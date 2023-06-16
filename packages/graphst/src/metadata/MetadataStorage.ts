@@ -11,6 +11,7 @@ import {
   ResolverGraphqlTypeMetadata,
 } from './interfaces';
 import { MetadataStorable } from './interfaces';
+import { MiddlewareClass } from '../middleware/middleware';
 
 let Metadata: MetadataStorable | null = null;
 
@@ -37,6 +38,7 @@ export class MetadataStorage implements MetadataStorable {
   >();
   private graphqlEntityTypes = new Map<Function, GraphQLObjectType>();
   private graphqlCustomTypes = new Set<GraphqlCusComType>();
+  private middlewares = [] as MiddlewareClass[];
 
   // set
   setProvider(target: Function, metadata: ProviderMetadata) {
@@ -91,6 +93,10 @@ export class MetadataStorage implements MetadataStorable {
   setGraphqlCustomType(type: GraphqlCusComType) {
     this.graphqlCustomTypes.add(type);
   }
+
+  setGlobalMiddlewares(middlewares: MiddlewareClass[]) {
+    this.middlewares = middlewares;
+  }
   // set end
 
   // get
@@ -134,6 +140,10 @@ export class MetadataStorage implements MetadataStorable {
     return [...this.providers.values()].filter(
       ({ type }) => type && type === providerType.RESOLVER
     );
+  }
+
+  getGlobalMiddlewares() {
+    return this.middlewares;
   }
   // get end
 }

@@ -11,6 +11,10 @@ import {
 import { Injectable } from '../../decorators/injectable.decorators';
 import { GraphqlCusComType } from '../../metadata/interfaces';
 import { MetadataStorage } from '../../metadata/MetadataStorage';
+import {
+  MiddlewareClass,
+  middlewareExecute,
+} from '../../middleware/middleware';
 
 @Injectable()
 export class FieldFactory {
@@ -25,42 +29,60 @@ export class FieldFactory {
         [key: string]: () => GraphQLInputType;
       };
       description?: string;
+      middlewares?: MiddlewareClass[];
     }[]
   ) {
     const fields: Thunk<GraphQLFieldConfigMap<any, any>> = {};
     const resolverMethods: { [key: string]: Function } = {};
 
-    props.forEach(({ name, returnType, fn, args, description }) => {
-      const methodName = typeof name === 'symbol' ? name.toString() : name;
-      const filedArg: { [key: string]: { type: any } } = {};
-      const argsEntries = args ? Object.entries(args) : [];
+    props.forEach(
+      ({ name, returnType, fn, args, description, middlewares }) => {
+        const methodName = typeof name === 'symbol' ? name.toString() : name;
+        const filedArg: { [key: string]: { type: any } } = {};
+        const argsEntries = args ? Object.entries(args) : [];
 
-      argsEntries.forEach(([key, graphQLInput]) => {
-        const argReturn = graphQLInput();
-        this.storage.setGraphqlCustomType(this.extractInnerType(argReturn));
-        filedArg[key] = { type: argReturn };
-      });
+        argsEntries.forEach(([key, graphQLInput]) => {
+          const argReturn = graphQLInput();
+          this.storage.setGraphqlCustomType(this.extractInnerType(argReturn));
+          filedArg[key] = { type: argReturn };
+        });
 
-      if (fn) {
-        resolverMethods[methodName] = fn;
+        if (fn) {
+          resolverMethods[methodName] = (
+            parent: any,
+            args: any,
+            context: any,
+            info: any
+          ) =>
+            middlewareExecute(
+              {
+                parent,
+                args,
+                context,
+                info,
+              },
+              [...this.storage.getGlobalMiddlewares(), ...(middlewares ?? [])],
+              fn
+            );
+        }
+
+        let returnTypeValue = returnType();
+
+        if (returnTypeValue instanceof Function) {
+          returnTypeValue = this.getEntityGraphqlType(returnTypeValue);
+        } else {
+          this.storage.setGraphqlCustomType(
+            this.extractInnerType(returnTypeValue)
+          );
+        }
+
+        fields[methodName] = {
+          type: returnTypeValue,
+          description,
+          ...(argsEntries.length > 0 ? { args: filedArg } : {}),
+        };
       }
-
-      let returnTypeValue = returnType();
-
-      if (returnTypeValue instanceof Function) {
-        returnTypeValue = this.getEntityGraphqlType(returnTypeValue);
-      } else {
-        this.storage.setGraphqlCustomType(
-          this.extractInnerType(returnTypeValue)
-        );
-      }
-
-      fields[methodName] = {
-        type: returnTypeValue,
-        description,
-        ...(argsEntries.length > 0 ? { args: filedArg } : {}),
-      };
-    });
+    );
 
     return {
       fields: Object.keys(fields).length > 0 ? fields : undefined,
