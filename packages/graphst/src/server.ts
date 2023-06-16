@@ -1,12 +1,15 @@
 import { Container } from './container';
 import { createServer, Server } from 'node:http';
 import { graphql } from 'graphql';
-import { GraphqlFactory } from './graphql/factory/graphqlFactory';
 import { GraphstContext } from './context/GraphstContext';
+import { GraphqlFactory } from './graphql/factory/graphqlFactory';
+import { MiddlewareClass } from './middleware/middleware';
 
 export interface GraphstOptions<TServerContext> {
   providers?: Function[];
   context?: TServerContext;
+  autoSchemaFilePath?: string;
+  middlewares?: MiddlewareClass[];
 }
 
 export type ContextCallback = new () => GraphstContext;
