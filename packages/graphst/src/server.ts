@@ -4,7 +4,7 @@ import { graphql } from 'graphql';
 import { GraphstContextClass } from './context/GraphstContext';
 import { GraphqlFactory } from './graphql/factory/graphqlFactory';
 import { MiddlewareClass } from './middleware/middleware';
-import { MetadataStorage } from './metadata/MetadataStorage';
+import { MetadataStorage } from './metadata/metadataStorage';
 
 export interface GraphstOptions<TServerContext> {
   providers?: Function[];

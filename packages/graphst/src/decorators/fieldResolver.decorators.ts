@@ -1,6 +1,7 @@
 import { GraphQLInputType, GraphQLOutputType } from 'graphql';
 import { GraphQLEntityType } from '../interfaces/type';
-import { MetadataStorage } from '../metadata/MetadataStorage';
+import { MetadataStorage } from '../metadata/metadataStorage';
+import { MiddlewareClass } from '../middleware/middleware';
 
 export function FieldResolver(options: {
   parent: () => GraphQLEntityType | Function;
@@ -8,6 +9,7 @@ export function FieldResolver(options: {
   args?: Record<string, () => GraphQLInputType>;
   name?: string;
   description?: string;
+  middlewares?: MiddlewareClass[];
 }): MethodDecorator {
   return (
     _target: object,
@@ -24,6 +26,7 @@ export function FieldResolver(options: {
       returnType: options.returnType,
       args: options.args,
       description: options.description,
+      middlewares: options.middlewares,
     });
   };
 }

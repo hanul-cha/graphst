@@ -23,6 +23,7 @@ export type SetMetaDataFunction<T, U = Function> = (
 export interface ProviderMetadata {
   target: Type;
   type?: providerType;
+  middlewares?: MiddlewareClass[];
 }
 
 export interface MetadataInjectProp {
@@ -52,6 +53,7 @@ export interface FieldResolverMetadata {
     [key: string]: () => GraphQLInputType;
   };
   description?: string;
+  middlewares?: MiddlewareClass[];
 }
 
 export interface FieldResolverTypeMetadata extends FieldResolverMetadata {

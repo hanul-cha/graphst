@@ -92,7 +92,7 @@ describe('graphst, auto.type.test', () => {
 
   graphqlFactory.generate();
   const schema = printSchema(graphqlFactory.getSchema());
-  console.log(schema);
+  // console.log(schema);
 
   it('Auto Graphql Custom Type Test', () => {
     const schemaTexts = [

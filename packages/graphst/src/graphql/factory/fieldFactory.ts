@@ -10,7 +10,7 @@ import {
 } from 'graphql';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { GraphqlCusComType } from '../../metadata/interfaces';
-import { MetadataStorage } from '../../metadata/MetadataStorage';
+import { MetadataStorage } from '../../metadata/metadataStorage';
 import {
   MiddlewareClass,
   middlewareExecute,

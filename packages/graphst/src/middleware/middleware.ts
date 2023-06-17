@@ -3,11 +3,11 @@ import { IncomingMessage } from 'node:http';
 export type GraphstProps = {
   parent: any;
   args: any;
-  info: any;
   context: {
     req: IncomingMessage;
     [key: string]: any;
   };
+  info: any;
 };
 
 export interface MiddlewareInterface {
@@ -26,10 +26,8 @@ export async function middlewareExecute(
 ) {
   if (middlewares.length > 0) {
     const [middleware, ...nextMiddlewares] = middlewares;
-    return Promise.resolve(
-      await new middleware().handle(context, (handlerContext) =>
-        middlewareExecute(handlerContext ?? context, nextMiddlewares, resolver)
-      )
+    return await new middleware().handle(context, (handlerContext) =>
+      middlewareExecute(handlerContext ?? context, nextMiddlewares, resolver)
     );
   }
   return resolver(context.parent, context.args, context.context, context.info);

@@ -1,11 +1,13 @@
 import { GraphQLInputType, GraphQLOutputType } from 'graphql';
 import { MetadataStorage } from '../metadata/metadataStorage';
+import { MiddlewareClass } from '../middleware/middleware';
 
 export function Mutation(option: {
   returnType: () => GraphQLOutputType | Function;
   args?: Record<string, () => GraphQLInputType>;
   name?: string;
   description?: string;
+  middlewares?: MiddlewareClass[];
 }): MethodDecorator {
   return (
     target: object,
@@ -24,6 +26,7 @@ export function Mutation(option: {
       returnType: option.returnType,
       args: option.args,
       description: option.description,
+      middlewares: option.middlewares,
     });
   };
 }

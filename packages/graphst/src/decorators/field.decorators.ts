@@ -1,5 +1,5 @@
 import { GraphQLOutputType } from 'graphql';
-import { MetadataStorage } from '../metadata/MetadataStorage';
+import { MetadataStorage } from '../metadata/metadataStorage';
 
 // TODO: Function overload로 리턴타입만 받는 경우생성 다른 데코레이터도 마찬가지
 export function Field(option: {

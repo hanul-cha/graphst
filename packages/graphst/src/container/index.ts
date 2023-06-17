@@ -1,5 +1,5 @@
 import { ConstructType } from '../interfaces/type';
-import { MetadataStorage } from '../metadata/MetadataStorage';
+import { MetadataStorage } from '../metadata/metadataStorage';
 import { ContainerOptions } from './interfaces';
 
 export class Container {

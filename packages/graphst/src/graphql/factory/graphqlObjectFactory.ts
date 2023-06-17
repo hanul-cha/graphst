@@ -1,7 +1,7 @@
 import { GraphQLNamedType, GraphQLObjectType } from 'graphql';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
-import { MetadataStorage } from '../../metadata/MetadataStorage';
+import { MetadataStorage } from '../../metadata/metadataStorage';
 import { GraphqlGenerateFactory, ResolverValue } from '../types';
 import { FieldFactory } from './fieldFactory';
 

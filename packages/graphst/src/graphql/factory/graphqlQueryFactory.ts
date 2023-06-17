@@ -1,7 +1,7 @@
 import { GraphQLObjectType } from 'graphql';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
-import { MetadataStorage } from '../../metadata/MetadataStorage';
+import { MetadataStorage } from '../../metadata/metadataStorage';
 import { GraphqlGenerateFactory } from '../types';
 import { FieldFactory } from './fieldFactory';
 
@@ -16,9 +16,13 @@ export class GraphqlQueryFactory implements GraphqlGenerateFactory {
     const resolvers = this.storage.getResolverAll();
     const queries = this.storage.getGraphqlMethod('Query');
 
-    //TODO: resolver 단위의 middleware 처리
-    const filteredQueries = resolvers.flatMap(({ target }) =>
-      queries.filter(({ resolver }) => resolver === target)
+    const filteredQueries = resolvers.flatMap(({ target, middlewares }) =>
+      queries
+        .filter(({ resolver }) => resolver === target)
+        .map((item) => ({
+          ...item,
+          middlewares: [...(middlewares ?? []), ...(item.middlewares ?? [])],
+        }))
     );
 
     const queryMethod = this.fieldFactory.getMethod(filteredQueries);
