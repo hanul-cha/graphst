@@ -12,15 +12,17 @@ export function FieldResolver(options: {
   middlewares?: MiddlewareClass[];
 }): MethodDecorator {
   return (
-    _target: object,
+    target: object,
     propertyKey: string | symbol,
     descriptor: TypedPropertyDescriptor<any>
   ) => {
+    const _target = target.constructor;
     const originalMethod = descriptor.value;
 
     const storage = MetadataStorage.getStorage();
     storage.setFieldResolver(options.parent, {
       target: options.parent,
+      resolver: _target,
       name: options.name || propertyKey,
       fn: originalMethod,
       returnType: options.returnType,

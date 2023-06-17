@@ -24,7 +24,8 @@ export class GraphqlObjectFactory implements GraphqlGenerateFactory {
       .map((resolver) => ({
         ...resolver,
         target: resolver.target(),
-      }));
+      }))
+      .filter(({ resolver }) => this.storage.getResolverByTarget(resolver));
 
     this.storage.getObjectTypeAll().forEach(({ target, name }) => {
       const objectMethod = this.fieldFactory.getMethod([

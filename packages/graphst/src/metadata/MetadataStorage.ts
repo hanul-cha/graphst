@@ -142,6 +142,14 @@ export class MetadataStorage implements MetadataStorable {
     );
   }
 
+  getResolverByTarget(target: Function) {
+    let resolver = this.providers.get(target);
+    if (resolver && resolver.type !== providerType.RESOLVER) {
+      resolver = undefined;
+    }
+    return resolver;
+  }
+
   getGlobalMiddlewares() {
     return this.middlewares;
   }

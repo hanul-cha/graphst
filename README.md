@@ -166,3 +166,8 @@ type TestObject {
 
 ## Context & MiddleWare
 TODO
+
+<!--
+  미들웨어 대상은 query, mutation, fieldResolver, resolver, 글로벌
+  resolver 미들웨어에선 fieldResolver는 제외됨
+ -->

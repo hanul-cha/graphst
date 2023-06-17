@@ -47,6 +47,7 @@ export type FieldResolverTarget = () => GraphQLEntityType | Function;
 
 export interface FieldResolverMetadata {
   name: string | symbol;
+  resolver: Function;
   returnType: () => GraphQLOutputType | Function;
   fn: Function;
   args?: {
@@ -63,7 +64,6 @@ export interface FieldResolverTypeMetadata extends FieldResolverMetadata {
 export type ResolverGraphqlTarget = 'Query' | 'Mutation' | 'Subscription';
 export interface ResolverGraphqlTypeMetadata extends FieldResolverMetadata {
   target: ResolverGraphqlTarget;
-  resolver: Function;
 }
 
 export type GraphqlCusComType =
@@ -100,6 +100,7 @@ export interface MetadataStorable {
   getGraphqlEntityType: (target: Function) => GraphQLObjectType | undefined;
   getGraphqlCustomTypeAll: () => GraphqlCusComType[];
   getResolverAll: () => ProviderMetadata[];
+  getResolverByTarget: (target: Function) => ProviderMetadata | undefined;
   getGlobalMiddlewares: () => MiddlewareClass[];
 
   clear: () => void;
