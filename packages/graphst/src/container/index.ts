@@ -6,7 +6,15 @@ export class Container {
   private storage = MetadataStorage.getStorage();
   private providerInstances = new WeakMap<Function, any>();
 
-  constructor(private readonly containerOptions: ContainerOptions) {}
+  constructor(readonly containerOptions: ContainerOptions) {
+    containerOptions.providers?.forEach(({ provide, valuable, callback }) => {
+      const instance = valuable ? new provide(valuable) : new provide();
+      if (callback) {
+        callback(instance);
+      }
+      this.providerInstances.set(provide, instance);
+    });
+  }
 
   boot() {
     // TODO: provider를 밖에서 생성된 인스턴스를 주입받을 수 있도록

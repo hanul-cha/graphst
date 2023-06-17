@@ -1,13 +1,15 @@
+import fs from 'fs';
 import { Container } from './container';
 import { createServer, Server } from 'node:http';
-import { graphql } from 'graphql';
+import { graphql, printSchema } from 'graphql';
 import { GraphstContextClass } from './context/GraphstContext';
 import { GraphqlFactory } from './graphql/factory/graphqlFactory';
 import { MiddlewareClass } from './middleware/middleware';
 import { MetadataStorage } from './metadata/metadataStorage';
+import { Provider } from './container/interfaces';
 
-export interface GraphstOptions<TServerContext> {
-  providers?: Function[];
+export interface GraphstOptions<TServerContext, U = any> {
+  providers?: Provider<U>[];
   context?: TServerContext;
   autoSchemaFilePath?: string;
   middlewares?: MiddlewareClass[];
@@ -25,6 +27,7 @@ export class GraphstServer<
   private container: Container;
   private server: Server | null = null;
   private context: TServerContext | null = null;
+  private autoSchemaFilePath: string | null = null;
 
   constructor(options?: GraphstOptions<TServerContext>) {
     const container = new Container({
@@ -35,13 +38,23 @@ export class GraphstServer<
     this.context = options?.context ?? null;
     this.container = container;
     this.storage.setGlobalMiddlewares(options?.middlewares ?? []);
+    this.autoSchemaFilePath = options?.autoSchemaFilePath ?? null;
   }
 
   start(port: number, callback?: () => void) {
-    const graphqlSchema = this.container.getProvider(GraphqlFactory).generate();
+    const graphqlFactory = this.container.getProvider(GraphqlFactory);
+    const graphqlSchema = graphqlFactory.generate();
 
     if (!graphqlSchema) {
       throw new Error('GraphQL Schema is not generated');
+    }
+
+    const schema = graphqlFactory.getSchema();
+    if (schema) {
+      fs.writeFileSync(
+        this.autoSchemaFilePath ?? 'schema.gql',
+        printSchema(schema)
+      );
     }
 
     this.server = createServer((req, res) => {

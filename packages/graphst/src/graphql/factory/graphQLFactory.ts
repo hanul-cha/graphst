@@ -11,7 +11,7 @@ import { GraphqlQueryFactory } from './graphqlQueryFactory';
 @Injectable()
 export class GraphqlFactory {
   private storage = MetadataStorage.getStorage();
-  private graphqlSchema!: GraphQLSchema;
+  private graphqlSchema: GraphQLSchema | null = null;
 
   @Inject(() => GraphqlObjectFactory)
   objectFactory!: GraphqlObjectFactory;
