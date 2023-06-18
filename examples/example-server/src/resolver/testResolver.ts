@@ -1,33 +1,52 @@
-import { Inject, Mutation, Query, Resolver } from 'graphst';
+import { GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLString } from 'graphql';
+import { FieldResolver, Inject, Mutation, Query, Resolver } from 'graphst';
 import { DataSource } from 'typeorm';
 import { TestTable } from '../entity/log';
+import { TestService } from '../service/testService';
 
 @Resolver(() => TestTable)
 export class TestTableResolver {
   @Inject(() => DataSource)
   dataSource!: DataSource;
 
+  @Inject(() => TestService)
+  testService!: TestService;
+
   @Query({
+    args: {
+      id: () => GraphQLNonNull(GraphQLID),
+    },
     returnType: () => TestTable,
   })
-  async getUser(): Promise<TestTable | null> {
+  async getUser(_: null, args: { id: number }): Promise<TestTable | null> {
+    console.log(this.testService.getTest());
     return this.dataSource.manager.findOne(TestTable, {
       where: {
-        id: 1,
+        id: args.id,
       },
     });
+  }
 
-    // return null;
+  @FieldResolver({
+    parent: () => TestTable,
+    returnType: () => GraphQLInt,
+  })
+  async getId(parent: TestTable): Promise<number> {
+    return parent.id;
   }
 
   @Mutation({
+    args: {
+      name: () => GraphQLNonNull(GraphQLString),
+    },
     returnType: () => TestTable,
   })
-  async setUser(): Promise<TestTable | null> {
-    return this.dataSource.manager.save(TestTable, {
-      id: 1,
-      name: 'test',
-    });
+  async setUser(_: null, args: { name: string }): Promise<TestTable | null> {
+    return this.dataSource.manager.save(
+      this.dataSource.manager.create(TestTable, {
+        name: args.name,
+      })
+    );
 
     // return null;
   }

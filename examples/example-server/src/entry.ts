@@ -4,12 +4,13 @@ import { TestTableResolver } from './resolver/testResolver';
 
 const dataSource = new DataSource({
   type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  database: 'test_db',
-  username: 'root',
-  password: 'root',
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT ? +process.env.DB_PORT : 3306,
+  database: process.env.DB_DATABASE,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
   synchronize: true,
+  entities: [__dirname + '/entity/*.js'],
 });
 
 dataSource
@@ -21,8 +22,6 @@ dataSource
     console.error('Error during Data Source initialization', err);
   });
 
-TestTableResolver;
-
 const server = new GraphstServer({
   providers: [
     {
@@ -30,6 +29,7 @@ const server = new GraphstServer({
       instance: dataSource,
     },
   ],
+  resolvers: [TestTableResolver],
 });
 
 server.start(4000, () => {

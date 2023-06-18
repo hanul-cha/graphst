@@ -1,4 +1,5 @@
 import { GraphQLNamedType, GraphQLObjectType } from 'graphql';
+import { Container } from '../../container';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { MetadataStorage } from '../../metadata/metadataStorage';
@@ -8,6 +9,7 @@ import { FieldFactory } from './fieldFactory';
 @Injectable()
 export class GraphqlObjectFactory implements GraphqlGenerateFactory {
   private storage = MetadataStorage.getStorage();
+  private container = Container;
 
   @Inject(() => FieldFactory)
   fieldFactory!: FieldFactory;
@@ -24,6 +26,7 @@ export class GraphqlObjectFactory implements GraphqlGenerateFactory {
       .map((resolver) => ({
         ...resolver,
         target: resolver.target(),
+        fn: resolver.fn.bind(this.container.getProvider(resolver.resolver)),
       }))
       .filter(({ resolver }) => this.storage.getResolverByTarget(resolver));
 

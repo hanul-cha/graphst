@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "graphql": "^15.0.0",
-    "graphst": "^1.0.5",
+    "graphst": "^1.0.6",
     "http": "0.0.1-security"
   }
 }

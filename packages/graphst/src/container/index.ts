@@ -2,13 +2,19 @@ import { ConstructType } from '../interfaces/type';
 import { MetadataStorage } from '../metadata/metadataStorage';
 import { ContainerOptions } from './interfaces';
 
+const providerInstances = new WeakMap<Function, any>();
+
 export class Container {
+  static getProvider<T extends ConstructType>(
+    target: T | Function
+  ): InstanceType<T> {
+    return providerInstances.get(target);
+  }
   private storage = MetadataStorage.getStorage();
-  private providerInstances = new WeakMap<Function, any>();
 
   constructor(readonly containerOptions: ContainerOptions) {
     containerOptions.providers?.forEach(({ key, instance }) => {
-      this.providerInstances.set(key, instance);
+      providerInstances.set(key, instance);
     });
   }
 
@@ -20,7 +26,7 @@ export class Container {
   private factory() {
     // 데코레이터로 수집한 객체가 있다면  인스턴스화 해서 모아놓음
     this.storage.getProviderAll().forEach(({ target }) => {
-      this.providerInstances.set(target, new target());
+      providerInstances.set(target, new target());
     });
   }
 
@@ -45,7 +51,6 @@ export class Container {
               configurable: true,
               writable: false,
               enumerable: false,
-              // [name]: propsData,
             });
           }
         }
@@ -56,6 +61,6 @@ export class Container {
   }
 
   getProvider<T extends ConstructType>(target: T | Function): InstanceType<T> {
-    return this.providerInstances.get(target);
+    return providerInstances.get(target);
   }
 }

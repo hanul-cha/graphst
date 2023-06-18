@@ -165,7 +165,45 @@ type TestObject {
 ```
 
 ## Context & MiddleWare
-TODO
+> :warning: **Important Note**: The FieldResolver is not affected by the resolver middleware.
+
+```ts
+class AddRole implements MiddlewareInterface {
+  // essential
+  handle(props, next) {
+    return next({
+      ...props,
+      context: {
+        ...props.context,
+        authRole: ['admin'],
+      },
+    });
+  }
+}
+```
+
+```ts
+// global middleware
+server = new GraphstServer({
+  middlewares: [AddRole],
+});
+
+...
+
+// resolver group middleware
+@Resolver({
+  key: () => Project,
+  middlewares: [AddRole],
+})
+
+...
+
+// query middleware, Also available in mutation and FieldResolver
+@Query({
+  middlewares: [AddRole],
+  returnType: () => GraphQLBoolean,
+})
+```
 
 <!--
   미들웨어 대상은 query, mutation, fieldResolver, resolver, 글로벌
