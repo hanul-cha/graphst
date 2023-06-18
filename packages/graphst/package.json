@@ -1,15 +1,22 @@
 {
   "name": "graphst",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "A simple graphql schema tool",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "build": "tsc"
+    "build": "rm -fr ./lib && tsc && babel ./src --out-dir ./lib --extensions \".ts\" --ignore \"src/**/*.test.ts\""
   },
   "author": "caroneul <caroneul3014@gmail.com>",
   "license": "MIT",
+  "repository": "https://github.com/hanul-cha/graphst",
+  "keywords": [
+    "types",
+    "graphql",
+    "typescript"
+  ],
   "peerDependencies": {
     "graphql": "^15.0.0"
   },

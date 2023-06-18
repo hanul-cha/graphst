@@ -2,19 +2,21 @@
   "name": "example-server",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "npm run build &&node dist/entry.js",
-    "dev": "ts-node src/server.ts",
+    "dev": "nodemon --exec \"npm run build && node dist/entry.js\"",
+    "start": "npm run build && node dist/entry.js",
+    "build": "rimraf dist && tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
     "ts-node": "^10.4.0",
-    "typescript": "^4.4.3"
+    "typescript": "^4.4.3",
+    "nodemon": "^2.0.22"
   },
   "dependencies": {
-    "graphst": "^1.0.1",
+    "graphql": "^15.0.0",
+    "graphst": "^1.0.4",
     "http": "0.0.1-security"
   }
 }

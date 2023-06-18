@@ -46,30 +46,22 @@ class User2Resolver {
 describe('graphst, typeorm.test', () => {
   let server;
 
+  const dataSource = new DataSource({
+    type: 'mysql',
+    host: 'localhost',
+    port: 3306,
+    database: 'test_db',
+    username: 'root',
+    password: 'root',
+    synchronize: true,
+  });
+
   beforeAll(() => {
     server = new GraphstServer({
       // providers: [
       //   {
-      //     provide: DataSource,
-      //     valuable: {
-      //       type: 'mysql',
-      //       host: 'localhost',
-      //       port: 3306,
-      //       database: 'test_db',
-      //       username: 'root',
-      //       password: 'root',
-      //       synchronize: true,
-      //     },
-      //     callback: (instance: DataSource) => {
-      //       instance
-      //         .initialize()
-      //         .then(() => {
-      //           console.log('Data Source has been initialized!');
-      //         })
-      //         .catch((err) => {
-      //           console.error('Error during Data Source initialization', err);
-      //         });
-      //     },
+      //     key: DataSource,
+      //     instance: dataSource,
       //   },
       // ],
     });

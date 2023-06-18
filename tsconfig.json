@@ -12,7 +12,8 @@
     "pretty": true,
     "sourceMap": true,
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noImplicitReturns": true
   },
   "rules": {
     "@typescript-eslint/ban-types": [
