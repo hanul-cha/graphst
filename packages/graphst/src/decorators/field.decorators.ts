@@ -1,18 +1,28 @@
 import { GraphQLOutputType } from 'graphql';
 import { MetadataStorage } from '../metadata/metadataStorage';
 
-// TODO: Function overload로 리턴타입만 받는 경우생성 다른 데코레이터도 마찬가지
-export function Field(option: {
+type FieldOption = {
   returnType: () => GraphQLOutputType;
   description?: string;
-}): PropertyDecorator {
+};
+export function Field(option: FieldOption): PropertyDecorator;
+export function Field(option: () => GraphQLOutputType): PropertyDecorator;
+export function Field(
+  option: (() => GraphQLOutputType) | FieldOption
+): PropertyDecorator {
   return (target: object, propertyKey: string | symbol) => {
+    const returnType =
+      typeof option === 'function' ? option : option.returnType;
+
+    const description =
+      typeof option === 'function' ? undefined : option.description;
+
     const _target = target.constructor;
     const storage = MetadataStorage.getStorage();
     storage.setField(_target, {
       name: propertyKey,
-      returnType: option.returnType,
-      description: option.description,
+      returnType,
+      description,
     });
   };
 }

@@ -18,14 +18,10 @@ describe('graphst, Query', () => {
 
   @ObjectType()
   class Project {
-    @Field({
-      returnType: () => GraphQLInt,
-    })
+    @Field(() => GraphQLInt)
     id!: number;
 
-    @Field({
-      returnType: () => GraphQLString,
-    })
+    @Field(() => GraphQLString)
     name!: string;
   }
 

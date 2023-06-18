@@ -7,17 +7,12 @@ export class Container {
   private providerInstances = new WeakMap<Function, any>();
 
   constructor(readonly containerOptions: ContainerOptions) {
-    containerOptions.providers?.forEach(({ provide, valuable, callback }) => {
-      const instance = valuable ? new provide(valuable) : new provide();
-      if (callback) {
-        callback(instance);
-      }
-      this.providerInstances.set(provide, instance);
+    containerOptions.providers?.forEach(({ key, instance }) => {
+      this.providerInstances.set(key, instance);
     });
   }
 
   boot() {
-    // TODO: provider를 밖에서 생성된 인스턴스를 주입받을 수 있도록
     this.factory();
     this.resolve();
   }

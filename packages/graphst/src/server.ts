@@ -8,8 +8,8 @@ import { MiddlewareClass } from './middleware/middleware';
 import { MetadataStorage } from './metadata/metadataStorage';
 import { Provider } from './container/interfaces';
 
-export interface GraphstOptions<TServerContext, U = any> {
-  providers?: Provider<U>[];
+export interface GraphstOptions<TServerContext> {
+  providers?: Provider[];
   context?: TServerContext;
   autoSchemaFilePath?: string;
   middlewares?: MiddlewareClass[];
