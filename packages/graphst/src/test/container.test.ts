@@ -2,6 +2,12 @@ import { Container } from '../container';
 import { Inject } from '../decorators/inject.decorators';
 import { Injectable } from '../decorators/injectable.decorators';
 
+class TestTable {
+  getTest() {
+    return '!!';
+  }
+}
+
 describe('graphst, Container', () => {
   // test용 클래스
   @Injectable()
@@ -65,6 +71,9 @@ describe('graphst, Container', () => {
     @Inject(() => Connection)
     readonly connection!: Connection;
 
+    @Inject(() => TestTable)
+    readonly testTable!: TestTable;
+
     @Inject(() => Age)
     readonly age!: Age;
 
@@ -78,10 +87,21 @@ describe('graphst, Container', () => {
     getUserAge() {
       return this.age.getAge();
     }
+
+    doTest() {
+      return this.testTable.getTest();
+    }
   }
   // 여기까지 test용 클래스
 
-  const container = new Container({});
+  const container = new Container({
+    providers: [
+      {
+        key: TestTable,
+        instance: new TestTable(),
+      },
+    ],
+  });
   container.boot();
 
   // 첫 뎁스의 인젝트 테스트
@@ -100,8 +120,9 @@ describe('graphst, Container', () => {
     expect(user.getUserAge()).toEqual(12);
   });
 
-  it('Circular dependency testing', () => {
+  it('set instance test', () => {
+    const user = container.getProvider(User);
     // TODO: circular dependency test
-    expect(1).toEqual(1);
+    expect(user.doTest()).toEqual('!!');
   });
 });

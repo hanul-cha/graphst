@@ -1,21 +1,34 @@
-import { Query, Resolver } from 'graphst';
-import { testTable } from '../entity/log';
+import { Inject, Mutation, Query, Resolver } from 'graphst';
+import { DataSource } from 'typeorm';
+import { TestTable } from '../entity/log';
 
-@Resolver(() => testTable)
-export class UserResolver {
-  // @Inject(() => DataSource)
-  // dataSource!: DataSource;
+@Resolver(() => TestTable)
+export class TestTableResolver {
+  @Inject(() => DataSource)
+  dataSource!: DataSource;
 
   @Query({
-    returnType: () => testTable,
+    returnType: () => TestTable,
   })
-  async getUser(): Promise<testTable | null> {
-    // return this.dataSource.manager.findOne(testTable, {
-    //   where: {
-    //     id: 1,
-    //   },
-    // });
+  async getUser(): Promise<TestTable | null> {
+    return this.dataSource.manager.findOne(TestTable, {
+      where: {
+        id: 1,
+      },
+    });
 
-    return null;
+    // return null;
+  }
+
+  @Mutation({
+    returnType: () => TestTable,
+  })
+  async setUser(): Promise<TestTable | null> {
+    return this.dataSource.manager.save(TestTable, {
+      id: 1,
+      name: 'test',
+    });
+
+    // return null;
   }
 }

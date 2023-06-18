@@ -1,5 +1,6 @@
 import { GraphstServer } from 'graphst';
 import { DataSource } from 'typeorm';
+import { TestTableResolver } from './resolver/testResolver';
 
 const dataSource = new DataSource({
   type: 'mysql',
@@ -20,13 +21,15 @@ dataSource
     console.error('Error during Data Source initialization', err);
   });
 
+TestTableResolver;
+
 const server = new GraphstServer({
-  // providers: [
-  //   {
-  //     key: DataSource,
-  //     instance: dataSource,
-  //   },
-  // ],
+  providers: [
+    {
+      key: DataSource,
+      instance: dataSource,
+    },
+  ],
 });
 
 server.start(4000, () => {

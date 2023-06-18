@@ -7,4 +7,5 @@ export interface Provider {
 
 export interface ContainerOptions {
   providers?: Provider[];
+  resolvers?: Type[];
 }

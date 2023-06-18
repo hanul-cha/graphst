@@ -7,9 +7,11 @@ import { GraphqlFactory } from './graphql/factory/graphqlFactory';
 import { MiddlewareClass } from './middleware/middleware';
 import { MetadataStorage } from './metadata/metadataStorage';
 import { Provider } from './container/interfaces';
+import { Type } from './interfaces/type';
 
 export interface GraphstOptions<TServerContext> {
   providers?: Provider[];
+  resolvers?: Type[];
   context?: TServerContext;
   autoSchemaFilePath?: string;
   middlewares?: MiddlewareClass[];
@@ -32,6 +34,7 @@ export class GraphstServer<
   constructor(options?: GraphstOptions<TServerContext>) {
     const container = new Container({
       providers: options?.providers ?? [],
+      resolvers: options?.resolvers ?? [],
     });
     container.boot();
 

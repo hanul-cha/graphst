@@ -3,17 +3,17 @@ import { Field, ObjectType } from 'graphst';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
-// @Entity({ name: 'test_table' })
-export class testTable {
+@Entity({ name: 'test_table' })
+export class TestTable {
   @Field({
     returnType: () => GraphQLInt,
   })
-  //   @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn()
   id!: number;
 
   @Field({
     returnType: () => GraphQLString,
   })
-  //   @Column({ type: String })
+  @Column({ type: String })
   name!: string;
 }
