@@ -14,7 +14,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "graphst": "file:../../packages/graphst",
+    "graphst": "^1.0.1",
     "http": "0.0.1-security"
   }
 }
