@@ -1,4 +1,5 @@
 import { IncomingMessage } from 'node:http';
+import { Container } from '../container';
 
 export type GraphstProps = {
   parent: any;
@@ -26,7 +27,9 @@ export async function middlewareExecute(
 ) {
   if (middlewares.length > 0) {
     const [middleware, ...nextMiddlewares] = middlewares;
-    return await new middleware().handle(context, (handlerContext) =>
+    const middlewareInstance =
+      Container.getProvider(middleware) ?? new middleware();
+    return await middlewareInstance.handle(context, (handlerContext) =>
       middlewareExecute(handlerContext ?? context, nextMiddlewares, resolver)
     );
   }

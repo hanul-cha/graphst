@@ -6,6 +6,8 @@ import { GraphstServer } from '../server';
 import { Resolver } from '../decorators/resolver.decorators';
 import { sendGraphQLRequest } from './utile';
 import { MiddlewareInterface } from '../middleware/middleware';
+import { Injectable } from '../decorators/injectable.decorators';
+import { Inject } from '../decorators/inject.decorators';
 
 const array = [] as string[];
 
@@ -16,8 +18,20 @@ class QueryMiddleware implements MiddlewareInterface {
   }
 }
 
+@Injectable()
+class TestClass {
+  toTest() {
+    return 'test success!!!!';
+  }
+}
+
+@Injectable()
 class AddRole implements MiddlewareInterface {
+  @Inject(() => TestClass)
+  testClass!: TestClass;
+
   handle(props, next) {
+    console.log(this.testClass.toTest());
     array.push('1');
     return next({
       ...props,
