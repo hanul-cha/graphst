@@ -17,7 +17,7 @@ import {
 } from '../../middleware/middleware';
 
 @Injectable()
-export class FieldFactory {
+export class GraphqlFieldFactory {
   private storage = MetadataStorage.getStorage();
 
   getMethod(

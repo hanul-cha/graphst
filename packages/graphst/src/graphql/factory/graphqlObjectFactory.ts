@@ -4,15 +4,15 @@ import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { ResolverValue } from '../types';
-import { FieldFactory } from './graphqlFieldFactory';
+import { GraphqlFieldFactory } from './graphqlFieldFactory';
 
 @Injectable()
 export class GraphqlObjectFactory {
   private storage = MetadataStorage.getStorage();
   private container = Container;
 
-  @Inject(() => FieldFactory)
-  fieldFactory!: FieldFactory;
+  @Inject(() => GraphqlFieldFactory)
+  fieldFactory!: GraphqlFieldFactory;
 
   generate() {
     const schemes = [] as GraphQLNamedType[];
