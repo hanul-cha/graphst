@@ -1,4 +1,5 @@
 import { GraphQLInputType, GraphQLOutputType } from 'graphql';
+import { GraphqlMethod } from '../interfaces/type';
 import { MetadataStorage } from '../metadata/metadataStorage';
 import { MiddlewareClass } from '../middleware/middleware';
 
@@ -18,8 +19,8 @@ export function Mutation(option: {
     const originalMethod = descriptor.value;
     const storage = MetadataStorage.getStorage();
 
-    storage.setGraphqlMethod('Mutation', {
-      target: 'Mutation',
+    storage.setGraphqlMethod(GraphqlMethod.MUTATION, {
+      target: GraphqlMethod.MUTATION,
       resolver: _target,
       fn: originalMethod,
       name: option.name || propertyKey,

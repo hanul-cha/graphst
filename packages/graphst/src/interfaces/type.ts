@@ -26,3 +26,9 @@ export type GraphQLEntityType =
   | GraphQLInterfaceType
   | GraphQLUnionType
   | GraphQLEnumType;
+
+export enum GraphqlMethod {
+  QUERY = 'Query',
+  MUTATION = 'Mutation',
+  SUBSCRIPTION = 'Subscription',
+}

@@ -7,11 +7,11 @@ import {
   ObjectTypeMetadata,
   ProviderMetadata,
   providerType,
-  ResolverGraphqlTarget,
   ResolverGraphqlTypeMetadata,
 } from './interfaces';
 import { MetadataStorable } from './interfaces';
 import { MiddlewareClass } from '../middleware/middleware';
+import { GraphqlMethod } from '../interfaces/type';
 
 let Metadata: MetadataStorable | null = null;
 
@@ -33,7 +33,7 @@ export class MetadataStorage implements MetadataStorable {
   private fields = new Map<Function, FieldTypeMetadata[]>();
   private fieldResolvers = new Set<FieldResolverTypeMetadata>();
   private graphqlMethods = new Map<
-    ResolverGraphqlTarget,
+    GraphqlMethod,
     ResolverGraphqlTypeMetadata[]
   >();
   private graphqlEntityTypes = new Map<Function, GraphQLObjectType>();
@@ -55,10 +55,7 @@ export class MetadataStorage implements MetadataStorable {
     this.injectProps.set(target, props);
   }
 
-  setGraphqlMethod(
-    target: ResolverGraphqlTarget,
-    option: ResolverGraphqlTypeMetadata
-  ) {
+  setGraphqlMethod(target: GraphqlMethod, option: ResolverGraphqlTypeMetadata) {
     let methods = this.graphqlMethods.get(target);
     if (methods) {
       methods.push(option);
@@ -124,7 +121,7 @@ export class MetadataStorage implements MetadataStorable {
     return [...this.fieldResolvers];
   }
 
-  getGraphqlMethod(target: ResolverGraphqlTarget) {
+  getGraphqlMethod(target: GraphqlMethod) {
     return this.graphqlMethods.get(target) ?? [];
   }
 

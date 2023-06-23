@@ -2,24 +2,24 @@ import { GraphQLObjectType } from 'graphql';
 import { Container } from '../../container';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
+import { GraphqlMethod } from '../../interfaces/type';
 import { MetadataStorage } from '../../metadata/metadataStorage';
-import { GraphqlGenerateFactory } from '../types';
-import { FieldFactory } from './fieldFactory';
+import { FieldFactory } from './graphqlFieldFactory';
 
 @Injectable()
-export class GraphqlMutationFactory implements GraphqlGenerateFactory {
+export class GraphqlMethodFactory {
   private storage = MetadataStorage.getStorage();
   private container = Container;
 
   @Inject(() => FieldFactory)
   fieldFactory!: FieldFactory;
 
-  generate() {
+  generate(graphqlMethod: GraphqlMethod) {
     const resolvers = this.storage.getResolverAll();
-    const mutations = this.storage.getGraphqlMethod('Mutation');
+    const methods = this.storage.getGraphqlMethod(graphqlMethod);
 
-    const filteredMutations = resolvers.flatMap(({ target, middlewares }) =>
-      mutations
+    const filteredQueries = resolvers.flatMap(({ target, middlewares }) =>
+      methods
         .filter(({ resolver }) => resolver === target)
         .map((item) => {
           const resolverInstance = this.container.getProvider(item.resolver);
@@ -35,19 +35,19 @@ export class GraphqlMutationFactory implements GraphqlGenerateFactory {
         })
     );
 
-    const mutationMethod = this.fieldFactory.getMethod(filteredMutations);
+    const method = this.fieldFactory.getMethod(filteredQueries);
 
     return {
-      schemes: mutationMethod.fields
+      schemes: method.fields
         ? [
             new GraphQLObjectType({
-              name: 'Mutation',
-              fields: mutationMethod.fields,
+              name: graphqlMethod,
+              fields: method.fields,
             }),
           ]
         : [],
-      resolvers: mutationMethod.resolverMethods
-        ? { Mutation: mutationMethod.resolverMethods }
+      resolvers: method.resolverMethods
+        ? { [graphqlMethod]: method.resolverMethods }
         : null,
     };
   }

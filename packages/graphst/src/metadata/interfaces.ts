@@ -8,7 +8,7 @@ import {
   GraphQLEnumType,
   GraphQLInputObjectType,
 } from 'graphql';
-import { GraphQLEntityType, Type } from '../interfaces/type';
+import { GraphQLEntityType, GraphqlMethod, Type } from '../interfaces/type';
 import { MiddlewareClass } from '../middleware/middleware';
 
 export enum providerType {
@@ -61,9 +61,8 @@ export interface FieldResolverTypeMetadata extends FieldResolverMetadata {
   target: FieldResolverTarget;
 }
 
-export type ResolverGraphqlTarget = 'Query' | 'Mutation' | 'Subscription';
 export interface ResolverGraphqlTypeMetadata extends FieldResolverMetadata {
-  target: ResolverGraphqlTarget;
+  target: GraphqlMethod;
 }
 
 export type GraphqlCusComType =
@@ -82,7 +81,7 @@ export interface MetadataStorable {
   setFieldResolver: SetMetaDataFunction<FieldResolverTypeMetadata>;
   setGraphqlMethod: SetMetaDataFunction<
     ResolverGraphqlTypeMetadata,
-    ResolverGraphqlTarget
+    GraphqlMethod
   >;
   setGraphqlEntityType: SetMetaDataFunction<GraphQLObjectType>;
   setGraphqlCustomType: (type: GraphqlCusComType) => void;
@@ -94,9 +93,7 @@ export interface MetadataStorable {
   getObjectTypeAll: () => ObjectTypeMetadata[];
   getFields: (target: Function) => FieldTypeMetadata[];
   getFieldResolverAll: () => FieldResolverTypeMetadata[];
-  getGraphqlMethod: (
-    target: ResolverGraphqlTarget
-  ) => ResolverGraphqlTypeMetadata[];
+  getGraphqlMethod: (target: GraphqlMethod) => ResolverGraphqlTypeMetadata[];
   getGraphqlEntityType: (target: Function) => GraphQLObjectType | undefined;
   getGraphqlCustomTypeAll: () => GraphqlCusComType[];
   getResolverAll: () => ProviderMetadata[];

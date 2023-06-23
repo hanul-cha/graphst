@@ -3,10 +3,10 @@ import { GraphQLSchema, printSchema } from 'graphql';
 import { gql } from 'graphql-tag';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
+import { GraphqlMethod } from '../../interfaces/type';
 import { MetadataStorage } from '../../metadata/metadataStorage';
-import { GraphqlMutationFactory } from './graphqlMutationFactory';
+import { GraphqlMethodFactory } from './graphqlMethodFactory';
 import { GraphqlObjectFactory } from './graphqlObjectFactory';
-import { GraphqlQueryFactory } from './graphqlQueryFactory';
 
 @Injectable()
 export class GraphqlFactory {
@@ -16,17 +16,14 @@ export class GraphqlFactory {
   @Inject(() => GraphqlObjectFactory)
   objectFactory!: GraphqlObjectFactory;
 
-  @Inject(() => GraphqlQueryFactory)
-  queryFactory!: GraphqlQueryFactory;
-
-  @Inject(() => GraphqlMutationFactory)
-  mutationFactory!: GraphqlMutationFactory;
+  @Inject(() => GraphqlMethodFactory)
+  methodFactory!: GraphqlMethodFactory;
 
   generate() {
     // 무조건 첫순서여야함 -> objectFactory에서 만든 Graphql타입을 query, mutation에서 사용할 수 있음
     const object = this.objectFactory.generate();
-    const mutation = this.mutationFactory.generate();
-    const query = this.queryFactory.generate();
+    const mutation = this.methodFactory.generate(GraphqlMethod.MUTATION);
+    const query = this.methodFactory.generate(GraphqlMethod.QUERY);
 
     const schema = new GraphQLSchema({
       mutation: mutation.schemes[0] ?? null,

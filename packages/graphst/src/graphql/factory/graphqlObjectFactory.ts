@@ -3,11 +3,11 @@ import { Container } from '../../container';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { MetadataStorage } from '../../metadata/metadataStorage';
-import { GraphqlGenerateFactory, ResolverValue } from '../types';
-import { FieldFactory } from './fieldFactory';
+import { ResolverValue } from '../types';
+import { FieldFactory } from './graphqlFieldFactory';
 
 @Injectable()
-export class GraphqlObjectFactory implements GraphqlGenerateFactory {
+export class GraphqlObjectFactory {
   private storage = MetadataStorage.getStorage();
   private container = Container;
 
