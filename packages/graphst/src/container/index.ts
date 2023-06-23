@@ -2,12 +2,12 @@ import { ConstructType } from '../interfaces/type';
 import { MetadataStorage } from '../metadata/metadataStorage';
 import { ContainerOptions } from './interfaces';
 
-const providerInstances = new WeakMap<Function, any>();
+const providerInstances = new WeakMap<Function, InstanceType<ConstructType>>();
 
 export class Container {
   static getProvider<T extends ConstructType>(
     target: T | Function
-  ): InstanceType<T> {
+  ): InstanceType<T> | undefined {
     return providerInstances.get(target);
   }
   private storage = MetadataStorage.getStorage();
@@ -60,7 +60,9 @@ export class Container {
     }
   }
 
-  getProvider<T extends ConstructType>(target: T | Function): InstanceType<T> {
+  getProvider<T extends ConstructType>(
+    target: T | Function
+  ): InstanceType<T> | undefined {
     return providerInstances.get(target);
   }
 }

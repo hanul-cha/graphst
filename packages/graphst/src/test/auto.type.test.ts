@@ -90,8 +90,8 @@ describe('graphst, auto.type.test', () => {
 
   const graphqlFactory = container.getProvider(GraphqlFactory);
 
-  graphqlFactory.generate();
-  const schema = printSchema(graphqlFactory.getSchema()!);
+  graphqlFactory?.generate();
+  const schema = printSchema(graphqlFactory!.getSchema()!);
   // console.log(schema);
 
   it('Auto Graphql Custom Type Test', () => {

@@ -21,11 +21,18 @@ export class GraphqlQueryFactory implements GraphqlGenerateFactory {
     const filteredQueries = resolvers.flatMap(({ target, middlewares }) =>
       queries
         .filter(({ resolver }) => resolver === target)
-        .map((item) => ({
-          ...item,
-          middlewares: [...(middlewares ?? []), ...(item.middlewares ?? [])],
-          fn: item.fn.bind(this.container.getProvider(item.resolver)),
-        }))
+        .map((item) => {
+          const resolverInstance = this.container.getProvider(item.resolver);
+          const fn = resolverInstance
+            ? item.fn.bind(resolverInstance)
+            : item.fn;
+
+          return {
+            ...item,
+            middlewares: [...(middlewares ?? []), ...(item.middlewares ?? [])],
+            fn,
+          };
+        })
     );
 
     const queryMethod = this.fieldFactory.getMethod(filteredQueries);

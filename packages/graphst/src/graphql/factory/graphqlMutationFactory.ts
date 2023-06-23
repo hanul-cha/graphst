@@ -21,11 +21,18 @@ export class GraphqlMutationFactory implements GraphqlGenerateFactory {
     const filteredMutations = resolvers.flatMap(({ target, middlewares }) =>
       mutations
         .filter(({ resolver }) => resolver === target)
-        .map((item) => ({
-          ...item,
-          middlewares: [...(middlewares ?? []), ...(item.middlewares ?? [])],
-          fn: item.fn.bind(this.container.getProvider(item.resolver)),
-        }))
+        .map((item) => {
+          const resolverInstance = this.container.getProvider(item.resolver);
+          const fn = resolverInstance
+            ? item.fn.bind(resolverInstance)
+            : item.fn;
+
+          return {
+            ...item,
+            middlewares: [...(middlewares ?? []), ...(item.middlewares ?? [])],
+            fn,
+          };
+        })
     );
 
     const mutationMethod = this.fieldFactory.getMethod(filteredMutations);

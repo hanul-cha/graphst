@@ -46,11 +46,11 @@ export class GraphstServer<
 
   start(port: number, callback?: () => void) {
     const graphqlFactory = this.container.getProvider(GraphqlFactory);
-    const graphqlSchema = graphqlFactory.generate();
-
-    if (!graphqlSchema) {
-      throw new Error('GraphQL Schema is not generated');
+    if (!graphqlFactory) {
+      throw new Error('GraphqlFactory is not provided');
     }
+
+    const graphqlSchema = graphqlFactory.generate();
 
     const schema = graphqlFactory.getSchema();
     if (schema) {

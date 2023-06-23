@@ -23,11 +23,18 @@ export class GraphqlObjectFactory implements GraphqlGenerateFactory {
     // TODO: target이 GraphqlObject일 때 처리 필요
     const fieldResolvers = this.storage
       .getFieldResolverAll()
-      .map((resolver) => ({
-        ...resolver,
-        target: resolver.target(),
-        fn: resolver.fn.bind(this.container.getProvider(resolver.resolver)),
-      }))
+      .map((resolver) => {
+        const resolverInstance = this.container.getProvider(resolver.resolver);
+        const fn = resolverInstance
+          ? resolver.fn.bind(resolverInstance)
+          : resolver.fn;
+
+        return {
+          ...resolver,
+          target: resolver.target(),
+          fn,
+        };
+      })
       .filter(({ resolver }) => this.storage.getResolverByTarget(resolver));
 
     this.storage.getObjectTypeAll().forEach(({ target, name }) => {

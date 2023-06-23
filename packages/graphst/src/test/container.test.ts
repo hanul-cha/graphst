@@ -109,6 +109,10 @@ describe('graphst, Container', () => {
     const connection = container.getProvider(Connection);
     const user = container.getProvider(User);
 
+    if (!user || !connection) {
+      throw new Error('instance is undefined');
+    }
+
     expect(user.test()).toEqual(12);
     expect(connection.doTest(2)).toEqual(2);
   });
@@ -117,11 +121,19 @@ describe('graphst, Container', () => {
   it('Dependency injection testing more than once deep', () => {
     const user = container.getProvider(User);
 
+    if (!user) {
+      throw new Error('instance is undefined');
+    }
+
     expect(user.getUserAge()).toEqual(12);
   });
 
   it('set instance test', () => {
     const user = container.getProvider(User);
+    if (!user) {
+      throw new Error('instance is undefined');
+    }
+
     // TODO: circular dependency test
     expect(user.doTest()).toEqual('!!');
   });
