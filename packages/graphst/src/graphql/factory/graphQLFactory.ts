@@ -20,7 +20,6 @@ export class GraphqlFactory {
   methodFactory!: GraphqlMethodFactory;
 
   generate() {
-    // 무조건 첫순서여야함 -> objectFactory에서 만든 Graphql타입을 query, mutation에서 사용할 수 있음
     const object = this.objectFactory.generate();
     const mutation = this.methodFactory.generate(GraphqlMethod.MUTATION);
     const query = this.methodFactory.generate(GraphqlMethod.QUERY);

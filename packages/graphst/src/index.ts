@@ -7,7 +7,6 @@ export { FieldResolver } from './decorators/fieldResolver.decorators';
 export { ObjectType } from './decorators/objectType.decorators';
 export { Inject } from './decorators/inject.decorators';
 export { Injectable } from './decorators/injectable.decorators';
-export { GraphstContextClass } from './context/GraphstContext';
 export {
   MiddlewareInterface,
   GraphstProps,

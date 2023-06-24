@@ -2,43 +2,32 @@ import fs from 'fs';
 import { Container } from './container';
 import { createServer, Server } from 'node:http';
 import { graphql, printSchema } from 'graphql';
-import { GraphstContextClass } from './context/GraphstContext';
 import { GraphqlFactory } from './graphql/factory/graphqlFactory';
 import { MiddlewareClass } from './middleware/middleware';
 import { MetadataStorage } from './metadata/metadataStorage';
 import { Provider } from './container/interfaces';
 import { Type } from './interfaces/type';
 
-export interface GraphstOptions<TServerContext> {
+export interface GraphstOptions {
   providers?: Provider[];
   resolvers?: Type[];
-  context?: TServerContext;
   autoSchemaFilePath?: string;
   middlewares?: MiddlewareClass[];
 }
 
-export type ContextCallback = new () => GraphstContextClass;
-
-export class GraphstServer<
-  T extends string,
-  TServerContext extends {
-    [key in T]: ContextCallback;
-  }
-> {
+export class GraphstServer {
   private storage = MetadataStorage.getStorage();
   private container: Container;
   private server: Server | null = null;
-  private context: TServerContext | null = null;
   private autoSchemaFilePath: string | null = null;
 
-  constructor(options?: GraphstOptions<TServerContext>) {
+  constructor(options?: GraphstOptions) {
     const container = new Container({
       providers: options?.providers ?? [],
       resolvers: options?.resolvers ?? [],
     });
     container.boot();
 
-    this.context = options?.context ?? null;
     this.container = container;
     this.storage.setGlobalMiddlewares(options?.middlewares ?? []);
     this.autoSchemaFilePath = options?.autoSchemaFilePath ?? null;
@@ -62,17 +51,6 @@ export class GraphstServer<
 
     this.server = createServer((req, res) => {
       const context = { req };
-
-      if (this.context) {
-        const entries = Object.entries(this.context) as [
-          string,
-          ContextCallback
-        ][];
-
-        for (const [key, fn] of entries) {
-          context[key] = new fn().result(req);
-        }
-      }
 
       if (req.method === 'POST') {
         let body = '';
