@@ -13,6 +13,7 @@ export interface GraphstOptions {
   resolvers?: Type[];
   autoSchemaFilePath?: string;
   middlewares?: MiddlewareClass[];
+  corsOptions?: string | number | readonly string[];
 }
 
 export class GraphstServer {
@@ -20,6 +21,7 @@ export class GraphstServer {
   private container: Container;
   private server: Server | null = null;
   private autoSchemaFilePath: string | null = null;
+  private corsOptions: GraphstOptions['corsOptions'] | null = null;
 
   constructor(options?: GraphstOptions) {
     const container = new Container({
@@ -31,6 +33,7 @@ export class GraphstServer {
     this.container = container;
     this.storage.setGlobalMiddlewares(options?.middlewares ?? []);
     this.autoSchemaFilePath = options?.autoSchemaFilePath ?? null;
+    this.corsOptions = options?.corsOptions ?? null;
   }
 
   start(port: number, callback?: () => void) {
@@ -50,9 +53,20 @@ export class GraphstServer {
     }
 
     this.server = createServer((req, res) => {
+      res.setHeader('Access-Control-Allow-Origin', this.corsOptions ?? '*');
+
       const context = { req };
 
-      if (req.method === 'POST') {
+      if (req.method === 'OPTIONS') {
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+        res.setHeader(
+          'Access-Control-Allow-Headers',
+          'Content-Type, Authorization'
+        );
+
+        res.writeHead(200);
+        res.end();
+      } else if (req.method === 'POST') {
         let body = '';
         req.on('data', (chunk) => {
           body += chunk;
