@@ -2,7 +2,7 @@ import { Container } from '../container';
 import { Inject } from '../decorators/inject.decorators';
 import { Injectable } from '../decorators/injectable.decorators';
 
-describe('graphst, circular dependency', () => {
+describe('graphst, circular.dependency.test', () => {
   // test용 클래스
   @Injectable()
   class Circular1 {
@@ -46,7 +46,7 @@ describe('graphst, circular dependency', () => {
   const container = new Container({});
   container.boot();
 
-  // 두개 이상 뎁스의 인젝트 테스트
+  // 순환종속성 주입 테스트
   it('Circular Dependency injection testing', () => {
     const circular1 = container.getProvider(Circular1);
     const circular2 = container.getProvider(Circular2);
