@@ -37,15 +37,27 @@ export class Container {
       instance: this.getProvider(target),
     }));
 
+    const done = new WeakSet<Function>();
+
     for (const { target, instance } of dependencies) {
-      const circular = (cTarget: Function, cInstance: any) => {
+      const circular = (
+        cTarget: Function,
+        cInstance: any,
+        currentTargets = new WeakSet()
+      ) => {
         const props = this.storage.getInjectProps(cTarget);
 
         for (const { name, prop } of props ?? []) {
           const targetProp = prop();
           const propsData = this.getProvider(targetProp);
+
           if (propsData) {
-            circular(targetProp, propsData);
+            // 현재 트리안에 주입이 끝났거나 모든 주입이 끝났거나
+            if (currentTargets.has(targetProp) || done.has(targetProp)) {
+              //
+            } else {
+              circular(targetProp, propsData, currentTargets.add(cTarget));
+            }
             Object.defineProperty(cInstance, name, {
               value: propsData,
               configurable: true,
@@ -54,6 +66,7 @@ export class Container {
             });
           }
         }
+        done.add(cTarget);
       };
 
       circular(target, instance);

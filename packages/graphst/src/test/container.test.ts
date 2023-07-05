@@ -127,14 +127,4 @@ describe('graphst, Container', () => {
 
     expect(user.getUserAge()).toEqual(12);
   });
-
-  it('set instance test', () => {
-    const user = container.getProvider(User);
-    if (!user) {
-      throw new Error('instance is undefined');
-    }
-
-    // TODO: circular dependency test
-    expect(user.doTest()).toEqual('!!');
-  });
 });

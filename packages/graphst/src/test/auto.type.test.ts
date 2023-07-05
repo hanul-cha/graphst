@@ -73,8 +73,25 @@ describe('graphst, auto.type.test', () => {
     do() {
       return '1';
     }
+
+    @FieldResolver({
+      parent: () => Log,
+      returnType: () => Log2,
+      description: '필드 테스트',
+    })
+    do2() {
+      return '1';
+    }
   }
 
+  @ObjectType('Log2')
+  class Log2 {
+    @Field({
+      returnType: () => GraphqlLogType,
+      description: '일반 필드 테스트',
+    })
+    getLog2!: LogType;
+  }
   @ObjectType('Log')
   class Log {
     @Field({
