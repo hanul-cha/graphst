@@ -37,15 +37,16 @@ export class GraphqlObjectFactory {
       ];
 
       const method = this.fieldFactory.getMethod(fieldProps);
-      const fields = this.fieldFactory.getSchema(fieldProps);
-
       let graphqlEntity = this.storage.getGraphqlEntityType(target);
 
-      if (!graphqlEntity && fields) {
-        graphqlEntity = new GraphQLObjectType({
-          name,
-          fields,
-        });
+      if (!graphqlEntity) {
+        const fields = this.fieldFactory.getSchema(fieldProps);
+        if (fields) {
+          graphqlEntity = new GraphQLObjectType({
+            name,
+            fields,
+          });
+        }
       }
 
       if (graphqlEntity) {
