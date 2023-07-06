@@ -11,7 +11,7 @@ import {
 } from './interfaces';
 import { MetadataStorable } from './interfaces';
 import { MiddlewareClass } from '../middleware/middleware';
-import { GraphqlMethod } from '../interfaces/type';
+import { GraphQLEntityType, GraphqlMethod } from '../interfaces/type';
 
 let Metadata: MetadataStorable | null = null;
 
@@ -39,6 +39,11 @@ export class MetadataStorage implements MetadataStorable {
   private graphqlEntityTypes = new Map<Function, GraphQLObjectType>();
   private graphqlCustomTypes = new Set<GraphqlCusComType>();
   private middlewares = [] as MiddlewareClass[];
+
+  private generatedFieldResolvers = new Map<
+    Function | GraphQLEntityType,
+    FieldResolverTypeMetadata[]
+  >();
 
   // set
   setProvider(target: Function, metadata: ProviderMetadata) {
@@ -109,6 +114,10 @@ export class MetadataStorage implements MetadataStorable {
     return [...this.injectProps.values()].flat();
   }
 
+  getObjectType(target: Function) {
+    return this.objectTypes.get(target);
+  }
+
   getObjectTypeAll() {
     return [...this.objectTypes.values()];
   }
@@ -117,8 +126,23 @@ export class MetadataStorage implements MetadataStorable {
     return this.fields.get(target) ?? [];
   }
 
-  getFieldResolverAll() {
-    return [...this.fieldResolvers];
+  getFieldResolvers(target: Function) {
+    if (this.fieldResolvers.size > 0) {
+      if (this.generatedFieldResolvers.size === 0) {
+        [...this.fieldResolvers].forEach((fieldResolver) => {
+          const targetFunction = fieldResolver.target();
+          let fields = this.generatedFieldResolvers.get(targetFunction);
+          if (fields) {
+            fields.push(fieldResolver);
+          } else {
+            fields = [fieldResolver];
+          }
+          this.generatedFieldResolvers.set(targetFunction, fields);
+        });
+      }
+      return this.generatedFieldResolvers.get(target) ?? [];
+    }
+    return [];
   }
 
   getGraphqlMethod(target: GraphqlMethod) {

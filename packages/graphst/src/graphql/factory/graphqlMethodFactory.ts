@@ -20,7 +20,7 @@ export class GraphqlMethodFactory {
       methods
         .filter(({ resolver }) => resolver === target)
         .map((item) =>
-          this.fieldFactory.bindResolver(item, {
+          this.fieldFactory.resolverBind(item, {
             middlewares: () => [
               ...(middlewares ?? []),
               ...(item.middlewares ?? []),

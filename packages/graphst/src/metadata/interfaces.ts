@@ -90,9 +90,10 @@ export interface MetadataStorable {
   getProviderAll: () => ProviderMetadata[];
   getInjectProps: (target: Function) => MetadataInjectProp[];
   getInjectPropAll: () => MetadataInjectProp[];
+  getObjectType: (target: Function) => ObjectTypeMetadata | undefined;
   getObjectTypeAll: () => ObjectTypeMetadata[];
   getFields: (target: Function) => FieldTypeMetadata[];
-  getFieldResolverAll: () => FieldResolverTypeMetadata[];
+  getFieldResolvers: (target: Function) => FieldResolverTypeMetadata[];
   getGraphqlMethod: (target: GraphqlMethod) => ResolverGraphqlTypeMetadata[];
   getGraphqlEntityType: (target: Function) => GraphQLObjectType | undefined;
   getGraphqlCustomTypeAll: () => GraphqlCusComType[];

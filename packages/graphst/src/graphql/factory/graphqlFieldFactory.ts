@@ -38,7 +38,7 @@ export class GraphqlFieldFactory {
   private storage = MetadataStorage.getStorage();
   private container = Container;
 
-  bindResolver<
+  resolverBind<
     U extends keyof O,
     F = any,
     O extends BindResolverProp = BindResolverProp
@@ -141,6 +141,7 @@ export class GraphqlFieldFactory {
   getEntityGraphqlType(target: Function): GraphQLObjectType {
     // TODO: 여기서 재귀함수로 Object타입을 전부 만들고 storage에 저장해야함
     // 여기서 고려해야할점은 재귀트리를 탈 때 순환되는것을 끊어주어야함
+    // 유틸함수 getObjectSchema를 사용할 수 있도록
     const graphqlEntity = this.storage.getGraphqlEntityType(target);
 
     if (!graphqlEntity) {
