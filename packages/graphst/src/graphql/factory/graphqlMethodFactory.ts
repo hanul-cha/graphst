@@ -1,5 +1,4 @@
 import { GraphQLObjectType } from 'graphql';
-import { Container } from '../../container';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { GraphqlMethod } from '../../interfaces/type';
@@ -9,7 +8,6 @@ import { GraphqlFieldFactory } from './graphqlFieldFactory';
 @Injectable()
 export class GraphqlMethodFactory {
   private storage = MetadataStorage.getStorage();
-  private container = Container;
 
   @Inject(() => GraphqlFieldFactory)
   fieldFactory!: GraphqlFieldFactory;
@@ -21,34 +19,29 @@ export class GraphqlMethodFactory {
     const filteredQueries = resolvers.flatMap(({ target, middlewares }) =>
       methods
         .filter(({ resolver }) => resolver === target)
-        .map((item) => {
-          const resolverInstance = this.container.getProvider(item.resolver);
-          const fn = resolverInstance
-            ? item.fn.bind(resolverInstance)
-            : item.fn;
-
-          return {
-            ...item,
-            middlewares: [...(middlewares ?? []), ...(item.middlewares ?? [])],
-            fn,
-          };
-        })
+        .map((item) =>
+          this.fieldFactory.bindResolver(item, {
+            middlewares: () => [
+              ...(middlewares ?? []),
+              ...(item.middlewares ?? []),
+            ],
+          })
+        )
     );
 
     const method = this.fieldFactory.getMethod(filteredQueries);
+    const schema = this.fieldFactory.getSchema(filteredQueries);
 
     return {
-      schemes: method.fields
+      schemes: schema
         ? [
             new GraphQLObjectType({
               name: graphqlMethod,
-              fields: method.fields,
+              fields: schema,
             }),
           ]
         : [],
-      resolvers: method.resolverMethods
-        ? { [graphqlMethod]: method.resolverMethods }
-        : null,
+      resolvers: method ? { [graphqlMethod]: method } : null,
     };
   }
 }

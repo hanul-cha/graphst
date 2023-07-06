@@ -1,5 +1,4 @@
 import { GraphQLNamedType, GraphQLObjectType } from 'graphql';
-import { Container } from '../../container';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { MetadataStorage } from '../../metadata/metadataStorage';
@@ -9,7 +8,6 @@ import { GraphqlFieldFactory } from './graphqlFieldFactory';
 @Injectable()
 export class GraphqlObjectFactory {
   private storage = MetadataStorage.getStorage();
-  private container = Container;
 
   @Inject(() => GraphqlFieldFactory)
   fieldFactory!: GraphqlFieldFactory;
@@ -23,37 +21,41 @@ export class GraphqlObjectFactory {
     // TODO: target이 GraphqlObject일 때 처리 필요
     const fieldResolvers = this.storage
       .getFieldResolverAll()
-      .map((resolver) => {
-        const resolverInstance = this.container.getProvider(resolver.resolver);
-        const fn = resolverInstance
-          ? resolver.fn.bind(resolverInstance)
-          : resolver.fn;
-
-        return {
-          ...resolver,
-          target: resolver.target(),
-          fn,
-        };
-      })
+      .map((resolver) =>
+        this.fieldFactory.bindResolver(resolver, {
+          target: () => resolver.target(),
+        })
+      )
       .filter(({ resolver }) => this.storage.getResolverByTarget(resolver));
 
-    this.storage.getObjectTypeAll().forEach(({ target, name }) => {
-      const objectMethod = this.fieldFactory.getMethod([
+    const objects = this.storage.getObjectTypeAll();
+
+    objects.forEach(({ target, name }) => {
+      const fieldProps = [
         ...this.storage.getFields(target),
         ...fieldResolvers.filter((resolver) => resolver.target === target),
-      ]);
+      ];
 
-      if (objectMethod.fields) {
-        const graphqlEntity = new GraphQLObjectType({
+      const method = this.fieldFactory.getMethod(fieldProps);
+      const fields = this.fieldFactory.getSchema(fieldProps);
+
+      let graphqlEntity = this.storage.getGraphqlEntityType(target);
+
+      if (!graphqlEntity && fields) {
+        graphqlEntity = new GraphQLObjectType({
           name,
-          fields: objectMethod.fields,
+          fields,
         });
+      }
+
+      if (graphqlEntity) {
         schemes.push(graphqlEntity);
+        // TODO: delete
         this.storage.setGraphqlEntityType(target, graphqlEntity);
       }
 
-      if (objectMethod.resolverMethods) {
-        resolvers[name] = objectMethod.resolverMethods;
+      if (method) {
+        resolvers[name] = method;
       }
     });
 
