@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { Container } from './container';
 import { createServer, Server } from 'node:http';
-import { graphql, printSchema } from 'graphql';
+import { graphql } from 'graphql';
 import { GraphqlFactory } from './graphql/factory/graphqlFactory';
 import { MiddlewareClass } from './middleware/middleware';
 import { MetadataStorage } from './metadata/metadataStorage';
@@ -46,10 +46,7 @@ export class GraphstServer {
 
     const schema = graphqlFactory.getSchema();
     if (schema) {
-      fs.writeFileSync(
-        this.autoSchemaFilePath ?? 'schema.gql',
-        printSchema(schema)
-      );
+      fs.writeFileSync(this.autoSchemaFilePath ?? 'schema.gql', schema);
     }
 
     this.server = createServer((req, res) => {

@@ -1,10 +1,11 @@
-import { GraphQLString, printSchema } from 'graphql';
+import { GraphQLList, GraphQLString } from 'graphql';
 import { Container } from '../container';
 import { Field } from '../decorators/field.decorators';
 import { FieldResolver } from '../decorators/fieldResolver.decorators';
 import { ObjectType } from '../decorators/objectType.decorators';
 import { Resolver } from '../decorators/resolver.decorators';
 import { GraphqlFactory } from '../graphql/factory/graphqlFactory';
+import { getObjectSchema } from '../graphql/utile/getObjectSchema';
 
 describe('graphst, circular.returnType.test', () => {
   // test용 클래스
@@ -37,7 +38,7 @@ describe('graphst, circular.returnType.test', () => {
   class ResolverCircular2 {
     @FieldResolver({
       parent: () => CircularEntity2,
-      returnType: () => CircularEntity1,
+      returnType: () => GraphQLList(getObjectSchema(CircularEntity1)),
     })
     toTest2(): CircularEntity1 {
       return {
@@ -59,7 +60,7 @@ describe('graphst, circular.returnType.test', () => {
   }
 
   graphqlFactory.generate();
-  const schema = printSchema(graphqlFactory!.getSchema()!);
+  const schema = graphqlFactory!.getSchema()!;
 
   // 서로 리턴하는 경우
   it('Circular graphql return type injection testing', () => {

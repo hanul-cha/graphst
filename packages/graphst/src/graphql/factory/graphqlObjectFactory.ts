@@ -47,8 +47,6 @@ export class GraphqlObjectFactory {
       const graphqlEntity = this.getEntityGraphqlType(target, name, fieldProps);
       if (graphqlEntity) {
         schemes.push(graphqlEntity);
-        // TODO: delete
-        this.storage.setGraphqlEntityType(target, graphqlEntity);
       }
 
       if (method) {
@@ -81,6 +79,10 @@ export class GraphqlObjectFactory {
           fields,
         });
       }
+    }
+
+    if (graphqlEntity) {
+      this.storage.setGraphqlEntityType(target, graphqlEntity);
     }
     return graphqlEntity;
   }

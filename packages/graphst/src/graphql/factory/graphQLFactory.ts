@@ -11,7 +11,7 @@ import { GraphqlObjectFactory } from './graphqlObjectFactory';
 @Injectable()
 export class GraphqlFactory {
   private storage = MetadataStorage.getStorage();
-  private graphqlSchema: GraphQLSchema | null = null;
+  private graphqlSchema: string | null = null;
 
   @Inject(() => GraphqlObjectFactory)
   objectFactory!: GraphqlObjectFactory;
@@ -30,7 +30,16 @@ export class GraphqlFactory {
       types: [...object.schemes, ...this.storage.getGraphqlCustomTypeAll()],
     });
 
-    this.graphqlSchema = schema;
+    this.graphqlSchema = printSchema(schema)
+      .split('\n')
+      .filter((line) => {
+        const trimmedLine = line.trim();
+        return !(
+          trimmedLine.startsWith('type') && trimmedLine.endsWith('__copy')
+        );
+      })
+      .join('\n')
+      .replace(/__copy/g, '');
 
     const resolvers = Object.assign(
       {},
@@ -41,7 +50,7 @@ export class GraphqlFactory {
 
     const schemas = makeExecutableSchema({
       typeDefs: gql`
-        ${printSchema(schema)}
+        ${this.graphqlSchema}
       `,
       resolvers,
     });

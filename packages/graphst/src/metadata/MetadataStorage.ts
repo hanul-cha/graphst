@@ -44,6 +44,7 @@ export class MetadataStorage implements MetadataStorable {
     Function | GraphQLEntityType,
     FieldResolverTypeMetadata[]
   >();
+  private copyGraphqlEntityType = new Map<Function, GraphQLObjectType>();
 
   // set
   setProvider(target: Function, metadata: ProviderMetadata) {
@@ -98,6 +99,10 @@ export class MetadataStorage implements MetadataStorable {
 
   setGlobalMiddlewares(middlewares: MiddlewareClass[]) {
     this.middlewares = middlewares;
+  }
+
+  setCopyGraphqlEntityType(target: Function, metaData: GraphQLObjectType) {
+    this.copyGraphqlEntityType.set(target, metaData);
   }
   // set end
 
@@ -173,6 +178,10 @@ export class MetadataStorage implements MetadataStorable {
 
   getGlobalMiddlewares() {
     return this.middlewares;
+  }
+
+  getCopyGraphqlEntityType(target: Function) {
+    return this.copyGraphqlEntityType.get(target);
   }
   // get end
 }

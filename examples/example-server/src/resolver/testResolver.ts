@@ -1,8 +1,23 @@
-import { GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLString } from 'graphql';
-import { FieldResolver, Inject, Mutation, Query, Resolver } from 'graphst';
+import {
+  GraphQLID,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLString,
+} from 'graphql';
+import {
+  FieldResolver,
+  getObjectSchema,
+  Inject,
+  Mutation,
+  Query,
+  Resolver,
+} from 'graphst';
 import { DataSource } from 'typeorm';
 import { TestTable } from '../entity/log';
+import { TestTable2 } from '../entity/log2';
 import { TestService } from '../service/testService';
+import { CustomType, GraphqlCustomType } from '../types';
 
 @Resolver(() => TestTable)
 export class TestTableResolver {
@@ -35,6 +50,30 @@ export class TestTableResolver {
     return parent.id;
   }
 
+  @FieldResolver({
+    parent: () => TestTable,
+    returnType: () =>
+      GraphQLNonNull(GraphQLList(GraphQLNonNull(getObjectSchema(TestTable2)))),
+  })
+  async getLog2s(parent: TestTable): Promise<TestTable2[]> {
+    return [];
+  }
+
+  @FieldResolver({
+    parent: () => TestTable2,
+    returnType: () => GraphQLNonNull(GraphqlCustomType),
+  })
+  async getLogs(parent: TestTable): Promise<CustomType> {
+    return {
+      data: {
+        table: {
+          id: 1,
+          name: '테스트',
+        },
+      },
+    };
+  }
+
   @Mutation({
     args: {
       name: () => GraphQLNonNull(GraphQLString),
@@ -47,7 +86,5 @@ export class TestTableResolver {
         name: args.name,
       })
     );
-
-    // return null;
   }
 }

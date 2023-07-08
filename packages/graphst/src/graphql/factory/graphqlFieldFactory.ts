@@ -16,6 +16,7 @@ import {
   MiddlewareClass,
   middlewareExecute,
 } from '../../middleware/middleware';
+import { getObjectSchema } from '../utile/getObjectSchema';
 
 interface FieldProp {
   name: string | symbol;
@@ -90,7 +91,7 @@ export class GraphqlFieldFactory {
       let returnTypeValue = returnType();
 
       if (returnTypeValue instanceof Function) {
-        returnTypeValue = this.getEntityGraphqlType(returnTypeValue);
+        returnTypeValue = getObjectSchema(returnTypeValue);
       } else {
         this.storage.setGraphqlCustomType(
           this.extractInnerType(returnTypeValue)
@@ -136,19 +137,6 @@ export class GraphqlFieldFactory {
     return Object.keys(resolverMethods).length > 0
       ? resolverMethods
       : undefined;
-  }
-
-  getEntityGraphqlType(target: Function): GraphQLObjectType {
-    // TODO: 여기서 재귀함수로 Object타입을 전부 만들고 storage에 저장해야함
-    // 여기서 고려해야할점은 재귀트리를 탈 때 순환되는것을 끊어주어야함
-    // 유틸함수 getObjectSchema를 사용할 수 있도록
-    const graphqlEntity = this.storage.getGraphqlEntityType(target);
-
-    if (!graphqlEntity) {
-      throw new Error(`Not found graphql entity type: ${target.name}`);
-    }
-
-    return graphqlEntity;
   }
 
   extractInnerType(type: GraphQLType): GraphqlCusComType {

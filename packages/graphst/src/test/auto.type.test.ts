@@ -84,14 +84,6 @@ describe('graphst, auto.type.test', () => {
     }
   }
 
-  @ObjectType('Log2')
-  class Log2 {
-    @Field({
-      returnType: () => GraphqlLogType,
-      description: '일반 필드 테스트',
-    })
-    getLog2!: LogType;
-  }
   @ObjectType('Log')
   class Log {
     @Field({
@@ -99,6 +91,15 @@ describe('graphst, auto.type.test', () => {
       description: '일반 필드 테스트',
     })
     getLog!: LogType;
+  }
+
+  @ObjectType('Log2')
+  class Log2 {
+    @Field({
+      returnType: () => GraphqlLogType,
+      description: '일반 필드 테스트',
+    })
+    getLog2!: LogType;
   }
   // 여기까지 test용 클래스
 
@@ -108,7 +109,7 @@ describe('graphst, auto.type.test', () => {
   const graphqlFactory = container.getProvider(GraphqlFactory);
 
   graphqlFactory?.generate();
-  const schema = printSchema(graphqlFactory!.getSchema()!);
+  const schema = graphqlFactory!.getSchema()!;
   // console.log(schema);
 
   it('Auto Graphql Custom Type Test', () => {

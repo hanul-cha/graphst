@@ -12,3 +12,4 @@ export {
   GraphstProps,
   MiddlewareClass,
 } from './middleware/middleware';
+export { getObjectSchema } from './graphql/utile/getObjectSchema';

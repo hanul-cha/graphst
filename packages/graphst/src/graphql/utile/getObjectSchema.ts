@@ -1,14 +1,7 @@
-import { Container } from '../../container';
+import { GraphQLObjectType } from 'graphql';
 import { MetadataStorage } from '../../metadata/metadataStorage';
-import { GraphqlObjectFactory } from '../factory/graphqlObjectFactory';
 
 export function getObjectSchema(target: Function) {
-  const graphqlFieldFactory = Container.getProvider(GraphqlObjectFactory);
-
-  if (!graphqlFieldFactory) {
-    throw new Error('container is not registered');
-  }
-
   const storage = MetadataStorage.getStorage();
   const object = storage.getObjectType(target);
 
@@ -16,13 +9,19 @@ export function getObjectSchema(target: Function) {
     throw new Error(`${target.name} is not registered`);
   }
 
-  const schema = graphqlFieldFactory.getEntityGraphqlType(
-    object.target,
-    object.name
-  );
+  let schema = storage.getGraphqlEntityType(target);
 
   if (!schema) {
-    throw new Error(`${object.name} is not registered`);
+    schema = storage.getCopyGraphqlEntityType(target);
+  }
+
+  if (!schema) {
+    schema = new GraphQLObjectType({
+      name: object.name + '__copy',
+      fields: {},
+    });
+
+    storage.setCopyGraphqlEntityType(target, schema);
   }
 
   return schema;
