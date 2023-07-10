@@ -8,6 +8,7 @@ import {
 import {
   FieldResolver,
   getObjectSchema,
+  GraphstError,
   Inject,
   Mutation,
   Query,
@@ -28,13 +29,19 @@ export class TestTableResolver {
   testService!: TestService;
 
   @Query({
+    returnType: () => GraphQLInt,
+  })
+  version() {
+    throw new GraphstError('test');
+  }
+
+  @Query({
     args: {
       id: () => GraphQLNonNull(GraphQLID),
     },
     returnType: () => TestTable,
   })
   async getUser(_: null, args: { id: number }): Promise<TestTable | null> {
-    console.log(this.testService.getTest());
     return this.dataSource.manager.findOne(TestTable, {
       where: {
         id: args.id,

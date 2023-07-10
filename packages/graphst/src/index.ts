@@ -13,3 +13,4 @@ export {
   MiddlewareClass,
 } from './middleware/middleware';
 export { getObjectSchema } from './graphql/utile/getObjectSchema';
+export { GraphstError } from './graphstError';

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { Container } from './container';
 import { createServer, Server } from 'node:http';
-import { graphql } from 'graphql';
+import { graphql, GraphQLError } from 'graphql';
 import { GraphqlFactory } from './graphql/factory/graphqlFactory';
 import { MiddlewareClass } from './middleware/middleware';
 import { MetadataStorage } from './metadata/metadataStorage';
@@ -39,7 +39,7 @@ export class GraphstServer {
   start(port: number, callback?: () => void) {
     const graphqlFactory = this.container.getProvider(GraphqlFactory);
     if (!graphqlFactory) {
-      throw new Error('GraphqlFactory is not provided');
+      throw new GraphQLError('GraphqlFactory is not provided');
     }
 
     const graphqlSchema = graphqlFactory.generate();
@@ -81,7 +81,13 @@ export class GraphstServer {
           );
 
           res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(result));
+          if (result.errors) {
+            console.error(result.errors);
+            res.writeHead(400);
+            res.end(JSON.stringify({ errors: result.errors }));
+          } else {
+            res.end(JSON.stringify(result));
+          }
         });
       } else {
         res.writeHead(400);

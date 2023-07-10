@@ -1,4 +1,4 @@
-import { GraphQLObjectType } from 'graphql';
+import { GraphQLError, GraphQLObjectType } from 'graphql';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 
 export function getObjectSchema(target: Function) {
@@ -6,7 +6,7 @@ export function getObjectSchema(target: Function) {
   const object = storage.getObjectType(target);
 
   if (!object) {
-    throw new Error(`${target.name} is not registered`);
+    throw new GraphQLError(`${target.name} is not registered`);
   }
 
   let schema = storage.getGraphqlEntityType(target);
