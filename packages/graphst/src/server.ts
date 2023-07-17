@@ -83,11 +83,8 @@ export class GraphstServer {
           res.setHeader('Content-Type', 'application/json');
           if (result.errors) {
             console.error(result.errors);
-            res.writeHead(400);
-            res.end(JSON.stringify({ errors: result.errors }));
-          } else {
-            res.end(JSON.stringify(result));
           }
+          res.end(JSON.stringify(result));
         });
       } else {
         res.writeHead(400);

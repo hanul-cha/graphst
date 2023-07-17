@@ -3,7 +3,6 @@ import {
   GraphQLInputType,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLObjectType,
   GraphQLOutputType,
   GraphQLType,
   Thunk,
