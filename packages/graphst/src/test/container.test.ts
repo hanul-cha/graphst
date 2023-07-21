@@ -1,4 +1,4 @@
-import { Container } from '../container';
+import { Container, getInstance } from '../container';
 import { Inject } from '../decorators/inject.decorators';
 import { Injectable } from '../decorators/injectable.decorators';
 
@@ -43,17 +43,9 @@ describe('graphst, Container', () => {
 
   @Injectable()
   class AgeService2 {
-    // @Inject(() => Age)
-    // readonly age!: Age;
-
     analyzer() {
       return 12;
     }
-
-    // TODO: 순환 종속 끊어주기
-    // getUserAge() {
-    //   return this.age.getAge();
-    // }
   }
 
   @Injectable()
@@ -106,12 +98,8 @@ describe('graphst, Container', () => {
 
   // 첫 뎁스의 인젝트 테스트
   it('should create container', () => {
-    const connection = container.getProvider(Connection);
-    const user = container.getProvider(User);
-
-    if (!user || !connection) {
-      throw new Error('instance is undefined');
-    }
+    const connection = getInstance(Connection);
+    const user = getInstance(User);
 
     expect(user.test()).toEqual(12);
     expect(connection.doTest(2)).toEqual(2);
@@ -119,11 +107,7 @@ describe('graphst, Container', () => {
 
   // 두개 이상 뎁스의 인젝트 테스트
   it('Dependency injection testing more than once deep', () => {
-    const user = container.getProvider(User);
-
-    if (!user) {
-      throw new Error('instance is undefined');
-    }
+    const user = getInstance(User);
 
     expect(user.getUserAge()).toEqual(12);
   });

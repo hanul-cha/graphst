@@ -4,7 +4,6 @@ import {
   GraphQLList,
   GraphQLObjectType,
   GraphQLString,
-  printSchema,
 } from 'graphql';
 import { Container } from '../container';
 import { Field } from '../decorators/field.decorators';

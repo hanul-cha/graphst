@@ -7,6 +7,7 @@ import {
 } from 'graphql';
 import {
   FieldResolver,
+  getInstance,
   getObjectSchema,
   GraphstError,
   Inject,
@@ -32,6 +33,8 @@ export class TestTableResolver {
     returnType: () => GraphQLInt,
   })
   version() {
+    const dataSource = getInstance(DataSource);
+    console.log(dataSource);
     throw new GraphstError('test');
   }
 

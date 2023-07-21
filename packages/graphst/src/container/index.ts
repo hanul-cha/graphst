@@ -4,6 +4,17 @@ import { ContainerOptions } from './interfaces';
 
 const providerInstances = new WeakMap<Function, InstanceType<ConstructType>>();
 
+export function getInstance<T extends ConstructType>(
+  target: T
+): InstanceType<T> {
+  const instance = Container.getProvider(target);
+
+  if (!instance) {
+    throw new Error(`Not found instance ${target.name}`);
+  }
+  return instance;
+}
+
 export class Container {
   static getProvider<T extends ConstructType>(
     target: T | Function

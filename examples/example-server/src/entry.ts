@@ -32,6 +32,6 @@ const server = new GraphstServer({
   resolvers: [TestTableResolver],
 });
 
-server.start(4000, () => {
+server.start(4001, () => {
   console.log('Server start 🕶️');
 });
