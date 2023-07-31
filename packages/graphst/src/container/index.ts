@@ -1,5 +1,5 @@
 import { ConstructType } from '../interfaces/type';
-import { MetadataStorage } from '../metadata/metadataStorage';
+import { MetadataStorage } from '../metadata/metadataStorag';
 import { ContainerOptions } from './interfaces';
 
 const providerInstances = new WeakMap<Function, InstanceType<ConstructType>>();

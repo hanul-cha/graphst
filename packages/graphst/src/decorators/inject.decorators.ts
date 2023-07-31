@@ -1,6 +1,6 @@
 import { ConstructType } from '../interfaces/type';
 import { MetadataInjectProp } from '../metadata/interfaces';
-import { MetadataStorage } from '../metadata/metadataStorage';
+import { MetadataStorage } from '../metadata/metadataStorag';
 
 export function Inject(prop: () => ConstructType): PropertyDecorator {
   return (target: object, propertyKey: string | symbol) => {

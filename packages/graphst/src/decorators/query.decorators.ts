@@ -1,6 +1,6 @@
 import { GraphQLInputType, GraphQLOutputType } from 'graphql';
 import { GraphqlMethod } from '../interfaces/type';
-import { MetadataStorage } from '../metadata/metadataStorage';
+import { MetadataStorage } from '../metadata/metadataStorag';
 import { MiddlewareClass } from '../middleware/middleware';
 
 export function Query(option: {
