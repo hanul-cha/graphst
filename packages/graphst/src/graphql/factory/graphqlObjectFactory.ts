@@ -5,7 +5,7 @@ import {
   FieldResolverTypeMetadata,
   FieldTypeMetadata,
 } from '../../metadata/interfaces';
-import { MetadataStorage } from '../../metadata/metadataStorag';
+import { MetadataStorage } from '../../metadata/metadataStorage';
 import { ResolverValue } from '../types';
 import { GraphqlFieldFactory } from './graphqlFieldFactory';
 

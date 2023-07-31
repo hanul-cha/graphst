@@ -1,4 +1,4 @@
-import { MetadataStorage } from '../metadata/metadataStorag';
+import { MetadataStorage } from '../metadata/metadataStorage';
 
 export function ObjectType(name?: string): ClassDecorator {
   const storage = MetadataStorage.getStorage();

@@ -1,6 +1,6 @@
 import { ConstructType } from '../interfaces/type';
 import { providerType } from '../metadata/interfaces';
-import { MetadataStorage } from '../metadata/metadataStorag';
+import { MetadataStorage } from '../metadata/metadataStorage';
 import { MiddlewareClass } from '../middleware/middleware';
 
 type ResolverOption = {

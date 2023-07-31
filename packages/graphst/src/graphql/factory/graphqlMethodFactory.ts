@@ -2,7 +2,7 @@ import { GraphQLObjectType } from 'graphql';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { GraphqlMethod } from '../../interfaces/type';
-import { MetadataStorage } from '../../metadata/metadataStorag';
+import { MetadataStorage } from '../../metadata/metadataStorage';
 import { GraphqlFieldFactory } from './graphqlFieldFactory';
 
 @Injectable()

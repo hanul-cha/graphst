@@ -1,5 +1,5 @@
 import { GraphQLError, GraphQLObjectType } from 'graphql';
-import { MetadataStorage } from '../../metadata/metadataStorag';
+import { MetadataStorage } from '../../metadata/metadataStorage';
 
 export function getObjectSchema(target: Function) {
   const storage = MetadataStorage.getStorage();

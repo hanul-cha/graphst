@@ -1,5 +1,5 @@
 import { GraphQLOutputType } from 'graphql';
-import { MetadataStorage } from '../metadata/metadataStorag';
+import { MetadataStorage } from '../metadata/metadataStorage';
 
 type FieldOption = {
   returnType: () => GraphQLOutputType;
