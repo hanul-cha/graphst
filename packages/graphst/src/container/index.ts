@@ -50,36 +50,36 @@ export class Container {
 
     const done = new WeakSet<Function>();
 
-    for (const { target, instance } of dependencies) {
-      const circular = (
-        cTarget: Function,
-        cInstance: any,
-        currentTargets = new WeakSet()
-      ) => {
-        const props = this.storage.getInjectProps(cTarget);
+    const circular = (
+      cTarget: Function,
+      cInstance: any,
+      currentTargets = new WeakSet()
+    ) => {
+      const props = this.storage.getInjectProps(cTarget);
 
-        for (const { name, prop } of props ?? []) {
-          const targetProp = prop();
-          const propsData = this.getProvider(targetProp);
+      for (const { name, prop } of props ?? []) {
+        const targetProp = prop();
+        const propsData = this.getProvider(targetProp);
 
-          if (propsData) {
-            // 현재 트리안에 주입이 끝났거나 모든 주입이 끝났거나
-            if (currentTargets.has(targetProp) || done.has(targetProp)) {
-              //
-            } else {
-              circular(targetProp, propsData, currentTargets.add(cTarget));
-            }
-            Object.defineProperty(cInstance, name, {
-              value: propsData,
-              configurable: true,
-              writable: false,
-              enumerable: false,
-            });
+        if (propsData) {
+          // 현재 트리안에 주입이 끝났거나 모든 주입이 끝났거나
+          if (currentTargets.has(targetProp) || done.has(targetProp)) {
+            //
+          } else {
+            circular(targetProp, propsData, currentTargets.add(cTarget));
           }
+          Object.defineProperty(cInstance, name, {
+            value: propsData,
+            configurable: true,
+            writable: false,
+            enumerable: false,
+          });
         }
-        done.add(cTarget);
-      };
+      }
+      done.add(cTarget);
+    };
 
+    for (const { target, instance } of dependencies) {
       circular(target, instance);
     }
   }
