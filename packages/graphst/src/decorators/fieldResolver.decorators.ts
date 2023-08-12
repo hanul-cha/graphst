@@ -1,5 +1,5 @@
 import { GraphQLInputType, GraphQLOutputType } from 'graphql';
-import { GraphQLEntityType } from '../interfaces/type';
+import { GraphQLEntityType } from '../graphql/types';
 import { MetadataStorage } from '../metadata/metadataStorage';
 import { MiddlewareClass } from '../middleware/middleware';
 

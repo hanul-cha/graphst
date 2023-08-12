@@ -5,13 +5,14 @@ import {
   GraphqlCusComType,
   MetadataInjectProp,
   ObjectTypeMetadata,
+  ParameterMetadata,
   ProviderMetadata,
   providerType,
   ResolverGraphqlTypeMetadata,
 } from './interfaces';
 import { MetadataStorable } from './interfaces';
 import { MiddlewareClass } from '../middleware/middleware';
-import { GraphQLEntityType, GraphqlMethod } from '../interfaces/type';
+import { GraphQLEntityType, GraphqlMethod } from '../graphql/types';
 
 let Metadata: MetadataStorable | null = null;
 
@@ -39,6 +40,10 @@ export class MetadataStorage implements MetadataStorable {
   private graphqlEntityTypes = new Map<Function, GraphQLObjectType>();
   private graphqlCustomTypes = new Set<GraphqlCusComType>();
   private middlewares = [] as MiddlewareClass[];
+  private parameters = new Map<
+    Function,
+    Map<string | symbol, (number | undefined)[]>
+  >();
 
   private generatedFieldResolvers = new Map<
     Function | GraphQLEntityType,
@@ -52,22 +57,14 @@ export class MetadataStorage implements MetadataStorable {
   }
 
   setInjectProps(target: Function, metaData: MetadataInjectProp) {
-    let props = this.injectProps.get(target);
-    if (props) {
-      props.push(metaData);
-    } else {
-      props = [metaData];
-    }
+    const props = this.injectProps.get(target) ?? [];
+    props.push(metaData);
     this.injectProps.set(target, props);
   }
 
   setGraphqlMethod(target: GraphqlMethod, option: ResolverGraphqlTypeMetadata) {
-    let methods = this.graphqlMethods.get(target);
-    if (methods) {
-      methods.push(option);
-    } else {
-      methods = [option];
-    }
+    const methods = this.graphqlMethods.get(target) ?? [];
+    methods.push(option);
     this.graphqlMethods.set(target, methods);
   }
 
@@ -76,12 +73,8 @@ export class MetadataStorage implements MetadataStorable {
   }
 
   setField(target: Function, metaData: FieldTypeMetadata) {
-    let fields = this.fields.get(target);
-    if (fields) {
-      fields.push(metaData);
-    } else {
-      fields = [metaData];
-    }
+    const fields = this.fields.get(target) ?? [];
+    fields.push(metaData);
     this.fields.set(target, fields);
   }
 
@@ -103,6 +96,21 @@ export class MetadataStorage implements MetadataStorable {
 
   setCopyGraphqlEntityType(target: Function, metaData: GraphQLObjectType) {
     this.copyGraphqlEntityType.set(target, metaData);
+  }
+
+  setParameter({
+    target,
+    propertyKey,
+    parameterIndex,
+    targetIndex,
+  }: ParameterMetadata): void {
+    const methodGroup =
+      this.parameters.get(target) ??
+      new Map<string | symbol, (number | undefined)[]>();
+    const methods = methodGroup.get(propertyKey) ?? [];
+    methods[targetIndex] = parameterIndex;
+    methodGroup.set(propertyKey, methods);
+    this.parameters.set(target, methodGroup);
   }
   // set end
 
@@ -136,12 +144,8 @@ export class MetadataStorage implements MetadataStorable {
       if (this.generatedFieldResolvers.size === 0) {
         [...this.fieldResolvers].forEach((fieldResolver) => {
           const targetFunction = fieldResolver.target();
-          let fields = this.generatedFieldResolvers.get(targetFunction);
-          if (fields) {
-            fields.push(fieldResolver);
-          } else {
-            fields = [fieldResolver];
-          }
+          const fields = this.generatedFieldResolvers.get(targetFunction) ?? [];
+          fields.push(fieldResolver);
           this.generatedFieldResolvers.set(targetFunction, fields);
         });
       }
@@ -182,6 +186,20 @@ export class MetadataStorage implements MetadataStorable {
 
   getCopyGraphqlEntityType(target: Function) {
     return this.copyGraphqlEntityType.get(target);
+  }
+
+  getParameter(
+    target: Function,
+    methodName: string
+  ): (number | undefined)[] | null {
+    const methodGroup = this.parameters.get(target);
+    if (methodGroup) {
+      const methods = methodGroup.get(methodName);
+      if (methods) {
+        return methods;
+      }
+    }
+    return null;
   }
   // get end
 }

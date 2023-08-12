@@ -1,4 +1,4 @@
-import { ConstructType } from '../interfaces/type';
+import { ConstructType } from '../types';
 import { MetadataStorage } from '../metadata/metadataStorage';
 import { ContainerOptions } from './interfaces';
 

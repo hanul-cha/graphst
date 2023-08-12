@@ -1,4 +1,4 @@
-import { ConstructType } from '../interfaces/type';
+import { ConstructType } from '../types';
 import { providerType } from '../metadata/interfaces';
 import { MetadataStorage } from '../metadata/metadataStorage';
 import { MiddlewareClass } from '../middleware/middleware';

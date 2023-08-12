@@ -1,4 +1,4 @@
-import { ConstructType } from '../interfaces/type';
+import { ConstructType } from '../types';
 import { MetadataInjectProp } from '../metadata/interfaces';
 import { MetadataStorage } from '../metadata/metadataStorage';
 

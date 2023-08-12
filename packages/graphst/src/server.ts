@@ -6,7 +6,7 @@ import { GraphqlFactory } from './graphql/factory/graphqlFactory';
 import { MiddlewareClass } from './middleware/middleware';
 import { MetadataStorage } from './metadata/metadataStorage';
 import { Provider } from './container/interfaces';
-import { Type } from './interfaces/type';
+import { Type } from './types';
 
 export interface GraphstOptions {
   providers?: Provider[];

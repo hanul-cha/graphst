@@ -3,8 +3,8 @@ import { GraphQLSchema, printSchema } from 'graphql';
 import { gql } from 'graphql-tag';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
-import { GraphqlMethod } from '../../interfaces/type';
 import { MetadataStorage } from '../../metadata/metadataStorage';
+import { GraphqlMethod } from '../types';
 import { GraphqlMethodFactory } from './graphqlMethodFactory';
 import { GraphqlObjectFactory } from './graphqlObjectFactory';
 

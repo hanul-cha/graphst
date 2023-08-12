@@ -8,8 +8,9 @@ import {
   GraphQLEnumType,
   GraphQLInputObjectType,
 } from 'graphql';
-import { GraphQLEntityType, GraphqlMethod, Type } from '../interfaces/type';
+import { Type } from '../types';
 import { MiddlewareClass } from '../middleware/middleware';
+import { GraphQLEntityType, GraphqlMethod } from '../graphql/types';
 
 export enum providerType {
   RESOLVER = 'RESOLVER',
@@ -41,6 +42,13 @@ export interface FieldTypeMetadata {
   name: string | symbol;
   returnType: () => GraphQLOutputType;
   description?: string;
+}
+
+export interface ParameterMetadata {
+  target: Function;
+  propertyKey: string | symbol;
+  parameterIndex: number;
+  targetIndex: number;
 }
 
 export type FieldResolverTarget = () => GraphQLEntityType | Function;
@@ -87,6 +95,7 @@ export interface MetadataStorable {
   setGraphqlCustomType: (type: GraphqlCusComType) => void;
   setGlobalMiddlewares: (middlewares: MiddlewareClass[]) => void;
   setCopyGraphqlEntityType: SetMetaDataFunction<GraphQLObjectType>;
+  setParameter: (data: ParameterMetadata) => void;
 
   getProviderAll: () => ProviderMetadata[];
   getInjectProps: (target: Function) => MetadataInjectProp[];
@@ -102,6 +111,10 @@ export interface MetadataStorable {
   getResolverByTarget: (target: Function) => ProviderMetadata | undefined;
   getGlobalMiddlewares: () => MiddlewareClass[];
   getCopyGraphqlEntityType: (target: Function) => GraphQLObjectType | undefined;
+  getParameter: (
+    target: Function,
+    methodName: string
+  ) => (number | undefined)[] | null;
 
   clear: () => void;
 }
