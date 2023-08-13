@@ -190,7 +190,7 @@ export class MetadataStorage implements MetadataStorable {
 
   getParameter(
     target: Function,
-    methodName: string
+    methodName: string | symbol
   ): (number | undefined)[] | null {
     const methodGroup = this.parameters.get(target);
     if (methodGroup) {

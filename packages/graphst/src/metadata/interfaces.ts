@@ -55,6 +55,7 @@ export type FieldResolverTarget = () => GraphQLEntityType | Function;
 
 export interface FieldResolverMetadata {
   name: string | symbol;
+  originalName: string | symbol;
   resolver: Function;
   returnType: () => GraphQLOutputType | Function;
   fn: Function;
@@ -113,7 +114,7 @@ export interface MetadataStorable {
   getCopyGraphqlEntityType: (target: Function) => GraphQLObjectType | undefined;
   getParameter: (
     target: Function,
-    methodName: string
+    methodName: string | symbol
   ) => (number | undefined)[] | null;
 
   clear: () => void;

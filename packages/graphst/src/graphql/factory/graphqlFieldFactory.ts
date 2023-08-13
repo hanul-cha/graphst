@@ -8,17 +8,17 @@ import {
   Thunk,
 } from 'graphql';
 import { Container } from '../../container';
+import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { GraphqlCusComType } from '../../metadata/interfaces';
 import { MetadataStorage } from '../../metadata/metadataStorage';
-import {
-  MiddlewareClass,
-  middlewareExecute,
-} from '../../middleware/middleware';
+import { MiddlewareClass, Middleware } from '../../middleware/middleware';
 import { getObjectSchema } from '../utile/getObjectSchema';
 
 interface FieldProp {
   name: string | symbol;
+  originalName?: string | symbol;
+  resolver?: Function;
   returnType: () => GraphQLOutputType | Function;
   fn?: Function;
   args?: {
@@ -35,6 +35,9 @@ interface BindResolverProp {
 
 @Injectable()
 export class GraphqlFieldFactory {
+  @Inject(() => Middleware)
+  private middleware!: Middleware;
+
   private storage = MetadataStorage.getStorage();
   private container = Container;
 
@@ -73,7 +76,9 @@ export class GraphqlFieldFactory {
     };
   }
 
-  getSchema(props: Omit<FieldProp, 'fn' | 'middlewares'>[]) {
+  getSchema(
+    props: Omit<FieldProp, 'fn' | 'middlewares' | 'originalName' | 'resolver'>[]
+  ) {
     const fields: Thunk<GraphQLFieldConfigMap<any, any>> = {};
 
     props.forEach(({ name, returnType, args, description }) => {
@@ -110,7 +115,7 @@ export class GraphqlFieldFactory {
   getMethod(props: Omit<FieldProp, 'returnType' | 'args' | 'description'>[]) {
     const resolverMethods: { [key: string]: Function } = {};
 
-    props.forEach(({ name, fn, middlewares }) => {
+    props.forEach(({ name, fn, middlewares, originalName, resolver }) => {
       const methodName = typeof name === 'symbol' ? name.toString() : name;
 
       if (fn) {
@@ -120,7 +125,7 @@ export class GraphqlFieldFactory {
           context: any,
           info: any
         ) =>
-          middlewareExecute(
+          this.middleware.execute(
             {
               parent,
               args,
@@ -128,7 +133,9 @@ export class GraphqlFieldFactory {
               info,
             },
             [...this.storage.getGlobalMiddlewares(), ...(middlewares ?? [])],
-            fn
+            fn,
+            resolver,
+            originalName
           );
       }
     });

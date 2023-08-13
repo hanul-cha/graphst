@@ -24,6 +24,7 @@ export function FieldResolver(options: {
       target: options.parent,
       resolver: _target,
       name: options.name || propertyKey,
+      originalName: propertyKey,
       fn: originalMethod,
       returnType: options.returnType,
       args: options.args,

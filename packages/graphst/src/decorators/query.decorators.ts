@@ -24,6 +24,7 @@ export function Query(option: {
       resolver: _target,
       fn: originalMethod,
       name: option.name || propertyKey,
+      originalName: propertyKey,
       returnType: option.returnType,
       args: option.args,
       description: option.description,
