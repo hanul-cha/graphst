@@ -15,3 +15,4 @@ export {
 export { getObjectSchema } from './graphql/utile/getObjectSchema';
 export { GraphstError } from './graphstError';
 export { getInstance } from './container';
+export { Parent, Args, Context, Info } from './decorators/parameter.decorators';

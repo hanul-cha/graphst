@@ -6,6 +6,7 @@ import {
   GraphQLString,
 } from 'graphql';
 import {
+  Args,
   FieldResolver,
   getInstance,
   getObjectSchema,
@@ -44,7 +45,7 @@ export class TestTableResolver {
     },
     returnType: () => TestTable,
   })
-  async getUser(_: null, args: { id: number }): Promise<TestTable | null> {
+  async getUser(@Args() args: { id: number }): Promise<TestTable | null> {
     return this.dataSource.manager.findOne(TestTable, {
       where: {
         id: args.id,

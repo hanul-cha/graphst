@@ -12,6 +12,7 @@ import { Field } from '../decorators/field.decorators';
 import { GraphstServer } from '../server';
 import { Resolver } from '../decorators/resolver.decorators';
 import { sendGraphQLRequest } from './utile';
+import { Args, Context, Parent } from '../decorators/parameter.decorators';
 
 describe('graphst, Query', () => {
   let server;
@@ -35,7 +36,13 @@ describe('graphst, Query', () => {
         keys: () => GraphQLList(GraphQLInt),
       },
     })
-    isProject(parent: Project, args: { keys?: number[] }): boolean {
+    isProject(
+      _: null,
+      __: null,
+      ___: null,
+      @Parent() parent: Project,
+      @Args() args: { keys?: number[] }
+    ): boolean {
       if ((args.keys ?? []).length > 0 && parent.id === 1) {
         return true;
       }
@@ -45,7 +52,7 @@ describe('graphst, Query', () => {
     @Query({
       returnType: () => Project,
     })
-    getProject(): Project {
+    getProject(@Context() context: any): Project {
       return {
         id: 1,
         name: '테스트 프로젝트',
@@ -58,12 +65,7 @@ describe('graphst, Query', () => {
       },
       returnType: () => GraphQLString,
     })
-    setProject(
-      _: null,
-      args: {
-        id: number;
-      }
-    ): string {
+    setProject(@Args() args: { id: number }): string {
       if (args.id === 1) {
         return '테스트 프로젝트';
       }
