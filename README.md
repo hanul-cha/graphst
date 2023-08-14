@@ -204,3 +204,40 @@ server = new GraphstServer({
   returnType: () => GraphQLBoolean,
 })
 ```
+
+## Resolver Parameter Order
+This is a decorator that selects the location of the resolver's parameters.
+If no decorators are used, the parameters are assigned in the default order.
+
+```ts
+@Query({
+  returnType: () => Project,
+})
+getProject(@Context() context: any): Project {
+  ...
+}
+
+@Mutation({
+  args: {
+    id: () => GraphQLInt,
+  },
+  returnType: () => GraphQLString,
+})
+setProject(@Args() args: { id: number }): string {
+  ...
+}
+
+@FieldResolver({
+  parent: () => Project,
+  ...
+})
+isProject(
+  _: null,
+  __: null,
+  ___: null,
+  @Parent() parent: Project,
+  @Args() args: { keys?: number[] }
+): boolean {
+  ...
+}
+```

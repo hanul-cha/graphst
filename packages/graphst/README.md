@@ -205,7 +205,39 @@ server = new GraphstServer({
 })
 ```
 
-<!--
-  미들웨어 대상은 query, mutation, fieldResolver, resolver, 글로벌
-  resolver 미들웨어에선 fieldResolver는 제외됨
- -->
+## Resolver Parameter Order
+This is a decorator that selects the location of the resolver's parameters.
+If no decorators are used, the parameters are assigned in the default order.
+
+```ts
+@Query({
+  returnType: () => Project,
+})
+getProject(@Context() context: any): Project {
+  ...
+}
+
+@Mutation({
+  args: {
+    id: () => GraphQLInt,
+  },
+  returnType: () => GraphQLString,
+})
+setProject(@Args() args: { id: number }): string {
+  ...
+}
+
+@FieldResolver({
+  parent: () => Project,
+  ...
+})
+isProject(
+  _: null,
+  __: null,
+  ___: null,
+  @Parent() parent: Project,
+  @Args() args: { keys?: number[] }
+): boolean {
+  ...
+}
+```
