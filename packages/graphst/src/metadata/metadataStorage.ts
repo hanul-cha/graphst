@@ -3,7 +3,6 @@ import {
   FieldResolverMetadata,
   FieldResolverTypeMetadata,
   FieldTypeMetadata,
-  GraphqlCusComType,
   MetadataInjectProp,
   ObjectTypeMetadata,
   ParameterMetadata,
@@ -40,7 +39,6 @@ export class MetadataStorage implements MetadataStorable {
     ResolverGraphqlTypeMetadata[]
   >();
   private generatedGraphqlObjectTypes = new Map<Function, GraphQLObjectType>();
-  private graphqlCustomTypes = new Set<GraphqlCusComType>();
   private middlewares = [] as MiddlewareClass[];
   private parameters = new Map<
     Function,
@@ -86,10 +84,6 @@ export class MetadataStorage implements MetadataStorable {
 
   setGeneratedGraphqlObjectType(target: Function, metaData: GraphQLObjectType) {
     this.generatedGraphqlObjectTypes.set(target, metaData);
-  }
-
-  setGraphqlCustomType(type: GraphqlCusComType) {
-    this.graphqlCustomTypes.add(type);
   }
 
   setGlobalMiddlewares(middlewares: MiddlewareClass[]) {
@@ -162,10 +156,6 @@ export class MetadataStorage implements MetadataStorable {
 
   getGeneratedGraphqlObjectType(target: Function) {
     return this.generatedGraphqlObjectTypes.get(target);
-  }
-
-  getGraphqlCustomTypeAll() {
-    return [...this.graphqlCustomTypes];
   }
 
   getResolverAll() {

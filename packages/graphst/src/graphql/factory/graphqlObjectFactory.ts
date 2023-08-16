@@ -25,14 +25,14 @@ export class GraphqlObjectFactory {
     const objects = this.storage.getObjectTypeAll();
 
     objects.forEach(({ target, name }) => {
-      const fieldProps = [
+      const fieldResolver = this.storage.getFieldResolvers(target);
+
+      const method = this.fieldFactory.getMethod(fieldResolver);
+
+      const graphqlEntity = this.getEntityGraphqlType(target, name, [
         ...this.storage.getFields(target),
-        ...this.storage.getFieldResolvers(target),
-      ];
-
-      const method = this.fieldFactory.getMethod(fieldProps);
-
-      const graphqlEntity = this.getEntityGraphqlType(target, name, fieldProps);
+        ...fieldResolver,
+      ]);
       if (graphqlEntity) {
         schemes.push(graphqlEntity);
       }

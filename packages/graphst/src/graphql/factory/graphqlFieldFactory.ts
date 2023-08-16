@@ -1,15 +1,11 @@
 import {
   GraphQLFieldConfigMap,
   GraphQLInputType,
-  GraphQLList,
-  GraphQLNonNull,
   GraphQLOutputType,
-  GraphQLType,
   Thunk,
 } from 'graphql';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
-import { GraphqlCusComType } from '../../metadata/interfaces';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { MiddlewareClass, Middleware } from '../../middleware/middleware';
 import { getObjectSchema } from '../utile/getObjectSchema';
@@ -46,7 +42,6 @@ export class GraphqlFieldFactory {
 
       argsEntries.forEach(([key, graphQLInput]) => {
         const argReturn = graphQLInput();
-        this.storage.setGraphqlCustomType(this.extractInnerType(argReturn));
         filedArg[key] = { type: argReturn };
       });
 
@@ -54,10 +49,6 @@ export class GraphqlFieldFactory {
 
       if (returnTypeValue instanceof Function) {
         returnTypeValue = getObjectSchema(returnTypeValue);
-      } else {
-        this.storage.setGraphqlCustomType(
-          this.extractInnerType(returnTypeValue)
-        );
       }
 
       fields[methodName] = {
@@ -101,12 +92,5 @@ export class GraphqlFieldFactory {
     return Object.keys(resolverMethods).length > 0
       ? resolverMethods
       : undefined;
-  }
-
-  extractInnerType(type: GraphQLType): GraphqlCusComType {
-    if (type instanceof GraphQLNonNull || type instanceof GraphQLList) {
-      return this.extractInnerType(type.ofType);
-    }
-    return type;
   }
 }

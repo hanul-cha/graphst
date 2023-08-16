@@ -3,14 +3,12 @@ import { GraphQLSchema, printSchema } from 'graphql';
 import { gql } from 'graphql-tag';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
-import { MetadataStorage } from '../../metadata/metadataStorage';
 import { GraphqlMethod } from '../types';
 import { GraphqlMethodFactory } from './graphqlMethodFactory';
 import { GraphqlObjectFactory } from './graphqlObjectFactory';
 
 @Injectable()
 export class GraphqlFactory {
-  private storage = MetadataStorage.getStorage();
   private graphqlSchema: string | null = null;
 
   @Inject(() => GraphqlObjectFactory)
@@ -27,7 +25,7 @@ export class GraphqlFactory {
     const schema = new GraphQLSchema({
       mutation: mutation.schemes[0] ?? null,
       query: query.schemes[0] ?? null,
-      types: [...object.schemes, ...this.storage.getGraphqlCustomTypeAll()],
+      types: object.schemes,
     });
 
     this.graphqlSchema = printSchema(schema)
