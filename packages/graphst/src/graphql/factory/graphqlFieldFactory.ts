@@ -7,7 +7,6 @@ import {
   GraphQLType,
   Thunk,
 } from 'graphql';
-import { Container } from '../../container';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { GraphqlCusComType } from '../../metadata/interfaces';
@@ -28,53 +27,12 @@ interface FieldProp {
   middlewares?: MiddlewareClass[];
 }
 
-interface BindResolverProp {
-  fn: Function;
-  resolver: Function;
-}
-
 @Injectable()
 export class GraphqlFieldFactory {
   @Inject(() => Middleware)
   private middleware!: Middleware;
 
   private storage = MetadataStorage.getStorage();
-  private container = Container;
-
-  resolverBind<
-    U extends keyof O,
-    F = any,
-    O extends BindResolverProp = BindResolverProp
-  >(
-    prop: O,
-    extraTask?: {
-      [key in U]: (prop: BindResolverProp) => F;
-    }
-  ): O {
-    const resolverInstance = this.container.getProvider(prop.resolver);
-    const fn = resolverInstance ? prop.fn.bind(resolverInstance) : prop.fn;
-
-    const result = {} as {
-      [key in U]: F;
-    };
-
-    if (extraTask) {
-      const entries = Object.entries(extraTask) as [
-        U,
-        (prop: BindResolverProp) => F
-      ][];
-
-      for (const [key, fn] of entries) {
-        result[key] = fn(prop);
-      }
-    }
-
-    return {
-      ...prop,
-      ...result,
-      fn,
-    };
-  }
 
   getSchema(
     props: Omit<FieldProp, 'fn' | 'middlewares' | 'originalName' | 'resolver'>[]

@@ -3,6 +3,7 @@ import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import { MetadataStorage } from '../../metadata/metadataStorage';
 import { GraphqlMethod } from '../types';
+import resolverBind from '../utile/resolverBind';
 import { GraphqlFieldFactory } from './graphqlFieldFactory';
 
 @Injectable()
@@ -20,7 +21,7 @@ export class GraphqlMethodFactory {
       methods
         .filter(({ resolver }) => resolver === target)
         .map((item) =>
-          this.fieldFactory.resolverBind(item, {
+          resolverBind(item, {
             middlewares: () => [
               ...(middlewares ?? []),
               ...(item.middlewares ?? []),

@@ -16,14 +16,6 @@ export class GraphqlObjectFactory {
   @Inject(() => GraphqlFieldFactory)
   fieldFactory!: GraphqlFieldFactory;
 
-  // TODO: target이 GraphqlObject일 때 처리 필요
-  resolverBind(target: Function) {
-    return this.storage
-      .getFieldResolvers(target)
-      .map((resolver) => this.fieldFactory.resolverBind(resolver))
-      .filter(({ resolver }) => this.storage.getResolverByTarget(resolver));
-  }
-
   generate() {
     const schemes = [] as GraphQLNamedType[];
     const resolvers: {
@@ -35,7 +27,7 @@ export class GraphqlObjectFactory {
     objects.forEach(({ target, name }) => {
       const fieldProps = [
         ...this.storage.getFields(target),
-        ...this.resolverBind(target),
+        ...this.storage.getFieldResolvers(target),
       ];
 
       const method = this.fieldFactory.getMethod(fieldProps);

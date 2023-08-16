@@ -14,6 +14,7 @@ import {
 import { MetadataStorable } from './interfaces';
 import { MiddlewareClass } from '../middleware/middleware';
 import { GraphQLEntityType, GraphqlMethod } from '../graphql/types';
+import resolverBind from '../graphql/utile/resolverBind';
 
 let Metadata: MetadataStorable | null = null;
 
@@ -146,7 +147,7 @@ export class MetadataStorage implements MetadataStorable {
         [...this.fieldResolvers].forEach((fieldResolver) => {
           const targetFunction = fieldResolver.target();
           const fields = this.generatedFieldResolvers.get(targetFunction) ?? [];
-          fields.push(fieldResolver);
+          fields.push(resolverBind(fieldResolver));
           this.generatedFieldResolvers.set(targetFunction, fields);
         });
       }
