@@ -9,7 +9,7 @@ export function getObjectSchema(target: Function) {
     throw new GraphQLError(`${target.name} is not registered`);
   }
 
-  let schema = storage.getGraphqlEntityType(target);
+  let schema = storage.getGeneratedGraphqlObjectType(target);
 
   if (!schema) {
     schema = storage.getCopyGraphqlEntityType(target);

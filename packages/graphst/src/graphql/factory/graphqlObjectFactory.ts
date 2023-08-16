@@ -63,27 +63,21 @@ export class GraphqlObjectFactory {
   getEntityGraphqlType(
     target: Function,
     name: string,
-    fields?: (FieldResolverTypeMetadata | FieldTypeMetadata)[]
+    fieldDatas: (FieldResolverTypeMetadata | FieldTypeMetadata)[]
   ) {
-    const fieldProps = fields ?? [
-      ...this.storage.getFields(target),
-      ...this.resolverBind(target),
-    ];
-    let graphqlEntity = this.storage.getGraphqlEntityType(target);
+    let graphqlEntity = this.storage.getGeneratedGraphqlObjectType(target);
 
     if (!graphqlEntity) {
-      const fields = this.fieldFactory.getSchema(fieldProps);
+      const fields = this.fieldFactory.getSchema(fieldDatas);
       if (fields) {
         graphqlEntity = new GraphQLObjectType({
           name,
           fields,
         });
+        this.storage.setGeneratedGraphqlObjectType(target, graphqlEntity);
       }
     }
 
-    if (graphqlEntity) {
-      this.storage.setGraphqlEntityType(target, graphqlEntity);
-    }
     return graphqlEntity;
   }
 }

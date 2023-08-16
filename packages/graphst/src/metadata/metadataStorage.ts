@@ -37,7 +37,7 @@ export class MetadataStorage implements MetadataStorable {
     GraphqlMethod,
     ResolverGraphqlTypeMetadata[]
   >();
-  private graphqlEntityTypes = new Map<Function, GraphQLObjectType>();
+  private generatedGraphqlObjectTypes = new Map<Function, GraphQLObjectType>();
   private graphqlCustomTypes = new Set<GraphqlCusComType>();
   private middlewares = [] as MiddlewareClass[];
   private parameters = new Map<
@@ -82,8 +82,8 @@ export class MetadataStorage implements MetadataStorable {
     this.fieldResolvers.add(metaData);
   }
 
-  setGraphqlEntityType(target: Function, metaData: GraphQLObjectType) {
-    this.graphqlEntityTypes.set(target, metaData);
+  setGeneratedGraphqlObjectType(target: Function, metaData: GraphQLObjectType) {
+    this.generatedGraphqlObjectTypes.set(target, metaData);
   }
 
   setGraphqlCustomType(type: GraphqlCusComType) {
@@ -158,8 +158,8 @@ export class MetadataStorage implements MetadataStorable {
     return this.graphqlMethods.get(target) ?? [];
   }
 
-  getGraphqlEntityType(target: Function) {
-    return this.graphqlEntityTypes.get(target);
+  getGeneratedGraphqlObjectType(target: Function) {
+    return this.generatedGraphqlObjectTypes.get(target);
   }
 
   getGraphqlCustomTypeAll() {

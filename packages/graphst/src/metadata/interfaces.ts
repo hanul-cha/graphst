@@ -92,7 +92,7 @@ export interface MetadataStorable {
     ResolverGraphqlTypeMetadata,
     GraphqlMethod
   >;
-  setGraphqlEntityType: SetMetaDataFunction<GraphQLObjectType>;
+  setGeneratedGraphqlObjectType: SetMetaDataFunction<GraphQLObjectType>;
   setGraphqlCustomType: (type: GraphqlCusComType) => void;
   setGlobalMiddlewares: (middlewares: MiddlewareClass[]) => void;
   setCopyGraphqlEntityType: SetMetaDataFunction<GraphQLObjectType>;
@@ -106,7 +106,9 @@ export interface MetadataStorable {
   getFields: (target: Function) => FieldTypeMetadata[];
   getFieldResolvers: (target: Function) => FieldResolverTypeMetadata[];
   getGraphqlMethod: (target: GraphqlMethod) => ResolverGraphqlTypeMetadata[];
-  getGraphqlEntityType: (target: Function) => GraphQLObjectType | undefined;
+  getGeneratedGraphqlObjectType: (
+    target: Function
+  ) => GraphQLObjectType | undefined;
   getGraphqlCustomTypeAll: () => GraphqlCusComType[];
   getResolverAll: () => ProviderMetadata[];
   getResolverByTarget: (target: Function) => ProviderMetadata | undefined;
