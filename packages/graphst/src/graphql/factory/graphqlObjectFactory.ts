@@ -2,7 +2,7 @@ import { GraphQLNamedType, GraphQLObjectType } from 'graphql';
 import { Inject } from '../../decorators/inject.decorators';
 import { Injectable } from '../../decorators/injectable.decorators';
 import {
-  FieldResolverTypeMetadata,
+  FieldResolverMetadata,
   FieldTypeMetadata,
 } from '../../metadata/interfaces';
 import { MetadataStorage } from '../../metadata/metadataStorage';
@@ -20,11 +20,7 @@ export class GraphqlObjectFactory {
   resolverBind(target: Function) {
     return this.storage
       .getFieldResolvers(target)
-      .map((resolver) =>
-        this.fieldFactory.resolverBind(resolver, {
-          target: () => resolver.target(),
-        })
-      )
+      .map((resolver) => this.fieldFactory.resolverBind(resolver))
       .filter(({ resolver }) => this.storage.getResolverByTarget(resolver));
   }
 
@@ -63,7 +59,7 @@ export class GraphqlObjectFactory {
   getEntityGraphqlType(
     target: Function,
     name: string,
-    fieldDatas: (FieldResolverTypeMetadata | FieldTypeMetadata)[]
+    fieldDatas: (FieldResolverMetadata | FieldTypeMetadata)[]
   ) {
     let graphqlEntity = this.storage.getGeneratedGraphqlObjectType(target);
 

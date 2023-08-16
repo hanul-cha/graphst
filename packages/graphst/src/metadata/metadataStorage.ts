@@ -1,5 +1,6 @@
 import { GraphQLObjectType } from 'graphql';
 import {
+  FieldResolverMetadata,
   FieldResolverTypeMetadata,
   FieldTypeMetadata,
   GraphqlCusComType,
@@ -47,7 +48,7 @@ export class MetadataStorage implements MetadataStorable {
 
   private generatedFieldResolvers = new Map<
     Function | GraphQLEntityType,
-    FieldResolverTypeMetadata[]
+    FieldResolverMetadata[]
   >();
   private copyGraphqlEntityType = new Map<Function, GraphQLObjectType>();
 

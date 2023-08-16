@@ -38,12 +38,6 @@ export interface ObjectTypeMetadata {
   target: Function;
 }
 
-export interface FieldTypeMetadata {
-  name: string | symbol;
-  returnType: () => GraphQLOutputType;
-  description?: string;
-}
-
 export interface ParameterMetadata {
   target: Function;
   propertyKey: string | symbol;
@@ -51,18 +45,21 @@ export interface ParameterMetadata {
   targetIndex: number;
 }
 
+export interface FieldTypeMetadata {
+  name: string | symbol;
+  returnType: () => GraphQLOutputType | Function;
+  originalName: string | symbol;
+  description?: string;
+}
+
 export type FieldResolverTarget = () => GraphQLEntityType | Function;
 
-export interface FieldResolverMetadata {
-  name: string | symbol;
-  originalName: string | symbol;
+export interface FieldResolverMetadata extends FieldTypeMetadata {
   resolver: Function;
-  returnType: () => GraphQLOutputType | Function;
   fn: Function;
   args?: {
     [key: string]: () => GraphQLInputType;
   };
-  description?: string;
   middlewares?: MiddlewareClass[];
 }
 
@@ -104,7 +101,7 @@ export interface MetadataStorable {
   getObjectType: (target: Function) => ObjectTypeMetadata | undefined;
   getObjectTypeAll: () => ObjectTypeMetadata[];
   getFields: (target: Function) => FieldTypeMetadata[];
-  getFieldResolvers: (target: Function) => FieldResolverTypeMetadata[];
+  getFieldResolvers: (target: Function) => FieldResolverMetadata[];
   getGraphqlMethod: (target: GraphqlMethod) => ResolverGraphqlTypeMetadata[];
   getGeneratedGraphqlObjectType: (
     target: Function

@@ -5,6 +5,7 @@ type FieldOption = {
   returnType: () => GraphQLOutputType;
   description?: string;
 };
+
 export function Field(option: FieldOption): PropertyDecorator;
 export function Field(option: () => GraphQLOutputType): PropertyDecorator;
 export function Field(
@@ -21,6 +22,7 @@ export function Field(
     const storage = MetadataStorage.getStorage();
     storage.setField(_target, {
       name: propertyKey,
+      originalName: propertyKey,
       returnType,
       description,
     });
